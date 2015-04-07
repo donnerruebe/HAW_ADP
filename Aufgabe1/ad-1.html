@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>L&ouml;sungsblatt Vorlage</title>
+<!-- morris graph lib -->
+<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+<!-- LaTeX-style equations -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+</script>
+<script type="text/javascript"
+  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- tests -->
+<script>
+  function assert(value, desc) {
+    var li = document.createElement("li");
+    li.style.color = value ? "green" : "red";
+    li.appendChild(document.createTextNode(desc));
+    var list = document.getElementById("results");
+    if (!list) {
+      list = document.createElement("div");
+      document.body.appendChild(list);
+    }
+    list.appendChild(li);
+  }
+</script>
+</head>
+<body>
+<h1 id="title">L&ouml;sungsblatt Vorlage</h1>
+
+Vorlage zur L&ouml;sung des ersten Aufgabenblatts.
+<ul>
+<li>
+Die erste &Uuml;berschrift soll Ihre Namen enthalten.
+</li>
+<li>
+Die Korrektheit Ihrer Implementierung muss durch sinnvolle Tests abgesichert sein.
+</li>
+<li>
+&Uuml;berlegen Sie sich sinnvolle Eingaben und Wiederholungen f&uuml;r die Experimente.
+</li>
+</ul>
+
+<h2>
+Aufgabe 1
+</h2>
+<p>
+Gegeben seien ein Startpunkt $x \in \mathbb{N}$ und ein Zielpunkt $y \in \mathbb{N}$ auf einer Geraden,
+sowie ein Schrittma&szlig; $d \in \mathbb{N}$. Gesucht ist die Anzahl der Schritte
+$steps(x, y, d) \in \mathbb{N}$, die ben&ouml;tigt werden, um einen Punkt zu erreichen, dessen Wert
+gr&ouml;&szlig;er als $y$ ist.
+</p>
+<p>
+Beispiel: Bei der Eingabe $x = 15$, $y = 80$, $d = 30$ sind drei Schritte n&ouml;tig.
+</p>
+<ol>
+<li>
+In Abh&auml;gigkeit von welchem Wert bestimmen Sie Laufzeit und Speicherplatzbedarf?
+</li>
+<li>
+Welchen Zeit- und welchen Platzaufwand hat eine naive Implementierung?
+</li>
+<li>
+Implementieren Sie die Methode $steps(x,y,d)$, welche die gesuchte Anzahl der Schritte in Zeitaufwand $O(1)$ und  Platzaufwand $O(1)$ berechnet.
+</li>
+</ol>
+<h2>
+Antwort 1
+</h2>
+<ol>
+<li>
+TODO
+</li>
+<li>
+TODO
+</li>
+<li>
+TODO
+</li>
+</ol>
+<h3>
+Implementierung
+</h3>
+<!-- In diesem Element wird der Inhalt des scripts mit der ID ad-1-1-results angezeigt -->
+<pre id="ad-1-1-source"></pre>
+<h3>
+Testergebnisse
+</h3>
+<div id="ad-1-1-results"></div>
+<!-- Code und Tests hier hin -->
+<script id="ad-1-1-code">
+  var ad_1_1_data = [];
+
+  // Code
+  MyClass = function() {
+    this.value = Math.ceil(Math.random()*100);
+  }
+
+  // Experiments
+  for(i = 0; i < 100; i ++) {
+    ad_1_1_data.push({
+      experiment : i,
+      value : new MyClass().value
+      });
+  }
+
+  // Tests
+  assert(ad_1_1_data.length === 100, "experiments have collected data");
+  assert(typeof(steps) === 'function', "function 'steps' not implemented");
+</script>
+<!-- dieser Code zeigt die Implementierung und die Tests an -->
+<script>
+$('pre#ad-1-1-source').html($('#ad-1-1-code').html())
+</script>
+
+<h3>
+Experimente
+</h3>
+
+<div id="ad-1-1-experiments" style="height: 250px;"></div>
+<script>
+new Morris.Line({
+  // ID of the element in which to draw the chart.
+  element: 'ad-1-1-experiments',
+  // do values relate to dates (time)?
+  parseTime: false,
+  // Chart data records -- each entry in this array corresponds to a point on
+  // the chart.
+  data: ad_1_1_data,
+  // The name of the data record attribute that contains x-values.
+  xkey: 'experiment',
+  // A list of names of data record attributes that contain y-values.
+  ykeys: ['value'],
+  // Labels for the ykeys -- will be displayed when you hover over the
+  // chart.
+  labels: ['Value']
+});
+</script>
+
+<!-- Aufgabe 2 -->
+<h2>
+Aufgabe 2
+</h2>
+Dies ist nur eine Vorlage
+<h2>
+Antwort 2
+</h2>
+<ol>
+<li>
+TODO
+</li>
+</ol>
+<h3>
+Implementierung
+</h3>
+<!-- In diesem Element wird der Inhalt des scripts mit der ID ad-1-2-code angezeigt -->
+<pre id="ad-1-2-source"></pre>
+<h3>
+Testergebnisse
+</h3>
+<div id="ad-1-2-results"></div>
+<!-- Code und Tests hier hin -->
+<script id="ad-1-2-code">
+  var ad_1_2_data = [];
+
+  // Code  
+
+  // Experiments
+  for(i = 0; i < 10; i ++) {
+    ad_1_2_data.push({
+      experiment : i,
+      value : new MyClass().value
+      });
+  }
+
+  // Tests
+  assert(ad_1_2_data.length === 10, "experiments have collected data");
+  assert(typeof(steps) === 'function', "function 'steps' not implemented");
+</script>
+<!-- dieser Code zeigt die Implementierung und die Tests an -->
+<script>
+$('pre#ad-1-2-source').html($('#ad-1-2-code').html())
+</script>
+
+<h3>
+Experimente
+</h3>
+
+<div id="ad-1-2-experiments" style="height: 250px;"></div>
+<script>
+new Morris.Line({
+  // ID of the element in which to draw the chart.
+  element: 'ad-1-2-experiments',
+  // do values relate to dates (time)?
+  parseTime: false,
+  // Chart data records -- each entry in this array corresponds to a point on
+  // the chart.
+  data: ad_1_2_data,
+  // The name of the data record attribute that contains x-values.
+  xkey: 'experiment',
+  // A list of names of data record attributes that contain y-values.
+  ykeys: ['value'],
+  // Labels for the ykeys -- will be displayed when you hover over the
+  // chart.
+  labels: ['Value']
+});
+</script>
+
+</body>
+</html>
