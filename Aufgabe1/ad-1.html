@@ -245,6 +245,128 @@ new Morris.Line({
   labels: ['Value']
 });
 </script>
+
+
+<div class="row">
+<h2>Aufgabe 3</h2>
+<script>
+
+//OOP
+function chainedList(data){
+
+    this.data=data;
+    this.next=undefined;
+    
+    this.cons = function(elem){
+        if(this.next!==undefined)
+        {this.next.cons(elem);}
+        else
+        {this.next=new chainedList(elem);}
+        return this;
+    };
+    
+    this.get = function(idx){
+        if(idx>0){
+            if(this.next!==undefined){
+                return this.next.get(idx-1);
+            }
+            return undefined;
+        }
+        else
+        {
+            return this.data;
+        }
+    }
+    
+    this.set = function(idx,val)
+    {
+        if(idx>0){
+            if(this.next!==undefined){
+                this.next.set(idx-1,val);
+            }
+            return undefined;
+        }
+        else
+        {
+            this.data=val;
+            return val;
+        }    
+    }
+    
+    this.head = function(){
+        return this.data;
+    };
+    
+    this.tail = function(){
+        return this.next;
+    };
+    
+    this.leng = function(){
+    if(this.next)
+    {
+        return this.next.leng() + 1;
+    }
+    else
+    {
+        return 1;
+    }
+    };
+    
+    this.isEmpty = function(){
+        return this.data === undefined && this.next === undefined;
+    };
+    
+    this.toString = function(){
+        return JSON.stringify(this.data) + (this.next!==undefined ? " , " + this.next.toString() : "");
+    }
+}
+
+var l = new chainedList('a');
+l.cons("Hallo");
+l.cons(1234);
+l.cons(l.leng());
+
+//procedural
+var list={data:"foofoo",next:undefined}
+
+var cons = function(data,list){
+    var item=list;
+    while(item.next)
+    {
+        item=item.next;
+    }
+    
+    item.next={data:data,next:undefined};
+    console.log(JSON.stringify(list));
+}
+
+var head = function(list){
+    return list.data;
+}
+
+var tail = function(list){
+    return list.next;
+}
+
+var leng =function(list)
+{
+    if(list.next)
+    {return 1 + leng(list.next);}
+    else
+    {return 1;}
+}
+
+var isEmpty = function(list){
+ return list.next===undefined && list.data===undefined;
+}
+
+cons("x,y,z",list);
+cons("x,y,q",list);
+console.log(leng(list));
+console.log(isEmpty(list));
+console.log(isEmpty({next:undefined,data:undefined}));
+</script>
+</div>
 </div>
 </body>
 </html>
