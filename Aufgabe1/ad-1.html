@@ -145,7 +145,30 @@ new Morris.Line({
 <h2>
 Aufgabe 2
 </h2>
-Dies ist nur eine Vorlage
+<script>
+    var fib=function(n){
+        var suma=0,sumb=1;
+        for(var i=0; i<=n;i++)
+        {
+            var summe=suma+sumb;
+            sumb= suma;
+            suma=summe;
+        }
+        return suma;
+    }
+    $().ready(function(){
+        for(var i=0; i<10;i++)
+        {
+            console.log(i + ' ' + fib(i));
+            $("#fibnaiv").append("<li>fib( "+i+" ) = "+fib(i)+"</li>");
+        }   
+    })
+
+</script>
+Fibonacci NAIV:
+<ul id="fibnaiv">
+
+</ul>
 <h2>
 Antwort 2
 </h2>
