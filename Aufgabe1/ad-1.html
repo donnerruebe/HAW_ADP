@@ -2,6 +2,7 @@
 <html>
 <head>
 <title></title>
+<meta charset='UTF-8' />
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
 
@@ -37,27 +38,92 @@
     }
     list.appendChild(li);
   }
+  
+  var assertEqual = function(call,value,info){
+    msg = '<div class="alert alert-danger" role="alert"><strong>FAILED:</strong> ' + info + '<br>the Result is not what you expected<br> [ '+ call +' != '+ value +' ]</div>';
+    if(call == value){
+        msg = '<div class="alert alert-warning" role="alert"><span class="glyphicon glyphicon-warning-sign"></span> ' + info + '<br>the Result may be not exacly what you expected<br> [ '+ call +' == '+ value +' ]</div>';
+    }
+    if(call === value){
+        msg = '<div class="alert alert-success" role="alert"><strong>OK!</strong> ' + info + '</div>';
+    }
+    return msg;
+  }
+  
+  jQuery.fn.extend({
+      executeTests: function(test) {
+        return this.each(function() {
+          console.log($(this).attr("id"));
+          var obj=$(this).attr("id");
+          //console.log(test[obj]);
+          if(typeof(test[obj])=== 'string')
+          {
+            $(this).append(test[obj]);
+          }
+        });
+      } 
+  });
+  
+  tests = {
+    'ad-1-1-results':"",
+    'ad-1-2-results':"",
+    'ad-1-3-results':"",
+  
+  };
+  
+  assertTest = function(Aufgabe,call,value,info)
+  {
+    tests[Aufgabe]+=assertEqual(call,value,info);
+  }
+  
+
 </script>
 </head>
 <body>
 <div class="container">
 <h1 id="title">L&ouml;sungsblatt Vorlage</h1>
+<div class="row">
+<div class="panel panel-default">
+  <div class="panel-heading">Teaminformationen</div>
+  <div class="panel-body" id="headpanel">
+  <div class="progress">
+      <div class="progress-bar  progress-bar-striped active" id="sumprogress" style="width: 0%">
+        <span></span>
+      </div>
+  </div>
+  </div>
+</div>
+</div>
 <script>
 //INIT
-</script>
-Vorlage zur L&ouml;sung des ersten Aufgabenblatts.
-<ul>
-<li>
-Die erste &Uuml;berschrift soll Ihre Namen enthalten.
-</li>
-<li>
-Die Korrektheit Ihrer Implementierung muss durch sinnvolle Tests abgesichert sein.
-</li>
-<li>
-&Uuml;berlegen Sie sich sinnvolle Eingaben und Wiederholungen f&uuml;r die Experimente.
-</li>
-</ul>
+var info = {
+    aufgabe: "Aufgabenblatt 1",
+    abgabe: "KW17?",
+    autor: ["Torben Haug","Jan Rübbelke"],  
+    progress: 20
+};
 
+$(document).ready(function(){
+    $("#title").text(info.aufgabe);
+    for(var index in info.autor)
+    {
+        var member=info.autor[index];
+        $("#headpanel").append("<li> " + member + " </li>");
+    }
+    var pbar=$("#sumprogress");
+    if(info.progress>=100)
+    {
+        info.progress=100;
+        pbar.removeClass("active");
+        pbar.removeClass("progress-bar-striped");
+        pbar.addClass("progress-bar-success");
+    }    
+    pbar.width(info.progress + "%");
+    $("span",pbar).text( info.progress + " %" );
+})
+</script>
+
+<div class="row">
 <h2>
 Aufgabe 1
 </h2>
@@ -81,20 +147,20 @@ Welchen Zeit- und welchen Platzaufwand hat eine naive Implementierung?
 Implementieren Sie die Methode $steps(x,y,d)$, welche die gesuchte Anzahl der Schritte in Zeitaufwand $O(1)$ und  Platzaufwand $O(1)$ berechnet.
 </li>
 </ol>
+</div>
 <h2>
 Antwort 1
 </h2>
-<ol>
-<li>
-TODO
+<ul class="list-group">
+<li class="list-group-item">
+Der Wert der gewünschten Naivität...
 </li>
-<li>
-TODO
+<li class="list-group-item">
+Wenn man annimmt, dass die naive Implementierung jedes mal testet ob $y < x + n * d$ gilt, ist eine Laufzeit von $O(n)$ zu erwarten und 
+ein Speicherplatzbedarf von $O(1)$, da der Zähler eine zusätzliche Speicherzelle benötigt.
 </li>
-<li>
-TODO
-</li>
-</ol>
+<li class="list-group-item">
+//TODO: Implementieren Sie die Methode $steps(x,y,d)$, welche die gesuchte Anzahl der Schritte in Zeitaufwand $O(1)$ und  Platzaufwand $O(1)$ berechnet.
 <h3>
 Implementierung
 </h3>
@@ -103,9 +169,15 @@ Implementierung
 <h3>
 Testergebnisse
 </h3>
-<div id="ad-1-1-results"></div>
+<div id="ad-1-1-results" class="testresults"></div>
 <!-- Code und Tests hier hin -->
 <script id="ad-1-1-code">
+
+  var steps = function(x,y,d)
+  {
+    return Math.ceil( (y - x) / d );
+  }
+
   var ad_1_1_data = [];
 
   // Code
@@ -122,10 +194,22 @@ Testergebnisse
   }
 
   // Tests
-  assert(ad_1_1_data.length === 100, "experiments have collected data");
-  assert(typeof(steps) === 'function', "function 'steps' not implemented");
+  var ad1_1_test = function(){
+    assert(steps(15,80,30)===3, "Funktion Steps rechnet richtig");
+    assert(ad_1_1_data.length === 100, "experiments have collected data");
+    assert(typeof(steps) === 'function', "function 'steps' not implemented");
+  }
+  
+  
+  assertTest("ad-1-1-results",steps(15,80,30),3,"Funktion Steps rechnet richtig");
+  assertTest("ad-1-1-results",1,true,"Beispiel für Warning!");
+  assertTest("ad-1-1-results",1,false,"Beispiel für FAILED!");
+  
+ 
 </script>
 <!-- dieser Code zeigt die Implementierung und die Tests an -->
+</li>
+</ul>
 <script>
 $('pre#ad-1-1-source').html($('#ad-1-1-code').html())
 </script>
@@ -158,26 +242,6 @@ new Morris.Line({
 <h2>
 Aufgabe 2
 </h2>
-<script>
-    var fib=function(n){
-        var suma=0,sumb=1;
-        for(var i=0; i<=n;i++)
-        {
-            var summe=suma+sumb;
-            sumb= suma;
-            suma=summe;
-        }
-        return suma;
-    }
-    $().ready(function(){
-        for(var i=0; i<10;i++)
-        {
-            console.log(i + ' ' + fib(i));
-            $("#fibnaiv").append('<li class="list-group-item">fib( '+i+" ) = "+fib(i)+"</li>");
-        }   
-    })
-
-</script>
 Fibonacci NAIV:
 <ul id="fibnaiv" class="list-group">
 
@@ -198,24 +262,67 @@ Implementierung
 <h3>
 Testergebnisse
 </h3>
-<div id="ad-1-2-results"></div>
+<div id="ad-1-2-results" class="testresults"></div>
 <!-- Code und Tests hier hin -->
 <script id="ad-1-2-code">
-  var ad_1_2_data = [];
+  
+      var fib=function(n){
+        var suma=0,sumb=1;
+        for(var i=0; i<=n;i++)
+        {
+            var summe=suma+sumb;
+            sumb= suma;
+            suma=summe;
+        }
+        return suma;
+    }
+    $().ready(function(){
+        for(var i=0; i<10;i++)
+        {
+            //console.log(i + ' ' + fib(i));
+            $("#fibnaiv").append('<li class="list-group-item">fib( '+i+" ) = "+fib(i)+"</li>");
+        }   
+    });
+  
+  var ad_1_2_data = [{
+        experiment : 0,
+        value : 0
+  }];
 
   // Code  
 
   // Experiments
-  for(i = 0; i < 10; i ++) {
+  var bathfib = function(fibNmax,iter){
+  ad_1_2_data = [];
+  for(i = 0; i <= fibNmax; i ++) {
+    var start = new Date();
+    var result = 0;
+    for(var x=0;x<iter;x++){
+        result=fib(i);
+    }
+    var stop = new Date();
+    
+    var startnum=(start.getTime())+start.getMilliseconds()/1000;
+    var stopnum=(stop.getTime())+stop.getMilliseconds()/1000;
+    //console.log(stopnum - startnum);
     ad_1_2_data.push({
       experiment : i,
-      value : new MyClass().value
+      value : stopnum - startnum
       });
+    console.log(i);
   }
+  
+  exp.setData(ad_1_2_data);
+  
+  };
+  
+  
 
   // Tests
-  assert(ad_1_2_data.length === 10, "experiments have collected data");
-  assert(typeof(steps) === 'function', "function 'steps' not implemented");
+  assertTest("ad-1-2-results",fib(0),1,"Fibonacci von 0 ist 1");
+  assertTest("ad-1-2-results",fib(1),1,"Fibonacci von 1 ist 1");
+  assertTest("ad-1-2-results",fib(2),2,"Fibonacci von 2 ist 2");
+  assertTest("ad-1-2-results",fib(9),55,"Fibonacci von 9 ist 55");
 </script>
 <!-- dieser Code zeigt die Implementierung und die Tests an -->
 <script>
@@ -225,10 +332,12 @@ $('pre#ad-1-2-source').html($('#ad-1-2-code').html())
 <h3>
 Experimente
 </h3>
-
+<button onclick="bathfib(1000,100000)">fib(n) (n=[0,1000]) je 100000 mal</button>
+<button onclick="bathfib(100,1000000)">fib(n) (n=[0,100]) je 1000000 mal</button>
+<button onclick="bathfib(10,10000000)">fib(n) (n=[0,10]) je 10000 mal</button>
 <div id="ad-1-2-experiments" style="height: 250px;"></div>
 <script>
-new Morris.Line({
+exp = new Morris.Line({
   // ID of the element in which to draw the chart.
   element: 'ad-1-2-experiments',
   // do values relate to dates (time)?
@@ -246,5 +355,9 @@ new Morris.Line({
 });
 </script>
 </div>
+
+<script>
+    $(".testresults").executeTests(tests);
+</script>
 </body>
 </html>
