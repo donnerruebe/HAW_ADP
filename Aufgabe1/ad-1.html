@@ -122,6 +122,7 @@ $(document).ready(function(){
     $("span",pbar).text( info.progress + " %" );
 })
 </script>
+Vorlage zur L&ouml;sung des ersten Aufgabenblatts.
 
 <div class="row">
 <h2>
@@ -147,20 +148,20 @@ Welchen Zeit- und welchen Platzaufwand hat eine naive Implementierung?
 Implementieren Sie die Methode $steps(x,y,d)$, welche die gesuchte Anzahl der Schritte in Zeitaufwand $O(1)$ und  Platzaufwand $O(1)$ berechnet.
 </li>
 </ol>
-</div>
 <h2>
 Antwort 1
 </h2>
-<ul class="list-group">
-<li class="list-group-item">
-Der Wert der gewünschten Naivität...
+<ol>
+<li>
+TODO
 </li>
-<li class="list-group-item">
-Wenn man annimmt, dass die naive Implementierung jedes mal testet ob $y < x + n * d$ gilt, ist eine Laufzeit von $O(n)$ zu erwarten und 
-ein Speicherplatzbedarf von $O(1)$, da der Zähler eine zusätzliche Speicherzelle benötigt.
+<li>
+TODO
 </li>
-<li class="list-group-item">
-//TODO: Implementieren Sie die Methode $steps(x,y,d)$, welche die gesuchte Anzahl der Schritte in Zeitaufwand $O(1)$ und  Platzaufwand $O(1)$ berechnet.
+<li>
+TODO
+</li>
+</ol>
 <h3>
 Implementierung
 </h3>
@@ -242,6 +243,7 @@ new Morris.Line({
 <h2>
 Aufgabe 2
 </h2>
+        {
 Fibonacci NAIV:
 <ul id="fibnaiv" class="list-group">
 
@@ -319,6 +321,7 @@ Testergebnisse
   
 
   // Tests
+  assert(ad_1_2_data.length === 10, "experiments have collected data");
   assertTest("ad-1-2-results",fib(0),1,"Fibonacci von 0 ist 1");
   assertTest("ad-1-2-results",fib(1),1,"Fibonacci von 1 ist 1");
   assertTest("ad-1-2-results",fib(2),2,"Fibonacci von 2 ist 2");
@@ -354,6 +357,128 @@ exp = new Morris.Line({
   labels: ['Value']
 });
 </script>
+
+
+<div class="row">
+<h2>Aufgabe 3</h2>
+<script>
+
+//OOP
+function chainedList(data){
+
+    this.data=data;
+    this.next=undefined;
+    
+    this.cons = function(elem){
+        if(this.next!==undefined)
+        {this.next.cons(elem);}
+        else
+        {this.next=new chainedList(elem);}
+        return this;
+    };
+    
+    this.get = function(idx){
+        if(idx>0){
+            if(this.next!==undefined){
+                return this.next.get(idx-1);
+            }
+            return undefined;
+        }
+        else
+        {
+            return this.data;
+        }
+    }
+    
+    this.set = function(idx,val)
+    {
+        if(idx>0){
+            if(this.next!==undefined){
+                this.next.set(idx-1,val);
+            }
+            return undefined;
+        }
+        else
+        {
+            this.data=val;
+            return val;
+        }    
+    }
+    
+    this.head = function(){
+        return this.data;
+    };
+    
+    this.tail = function(){
+        return this.next;
+    };
+    
+    this.leng = function(){
+    if(this.next)
+    {
+        return this.next.leng() + 1;
+    }
+    else
+    {
+        return 1;
+    }
+    };
+    
+    this.isEmpty = function(){
+        return this.data === undefined && this.next === undefined;
+    };
+    
+    this.toString = function(){
+        return JSON.stringify(this.data) + (this.next!==undefined ? " , " + this.next.toString() : "");
+    }
+}
+
+var l = new chainedList('a');
+l.cons("Hallo");
+l.cons(1234);
+l.cons(l.leng());
+
+//procedural
+var list={data:"foofoo",next:undefined}
+
+var cons = function(data,list){
+    var item=list;
+    while(item.next)
+    {
+        item=item.next;
+    }
+    
+    item.next={data:data,next:undefined};
+    console.log(JSON.stringify(list));
+}
+
+var head = function(list){
+    return list.data;
+}
+
+var tail = function(list){
+    return list.next;
+}
+
+var leng =function(list)
+{
+    if(list.next)
+    {return 1 + leng(list.next);}
+    else
+    {return 1;}
+}
+
+var isEmpty = function(list){
+ return list.next===undefined && list.data===undefined;
+}
+
+cons("x,y,z",list);
+cons("x,y,q",list);
+console.log(leng(list));
+console.log(isEmpty(list));
+console.log(isEmpty({next:undefined,data:undefined}));
+</script>
+</div>
 </div>
 
 <script>
