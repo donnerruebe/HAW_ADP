@@ -464,7 +464,7 @@ exp = new Morris.Line({
 
 <div class="row">
 <h2>Aufgabe 3</h2>
-<script>
+<script id="code_3">
 
 //OOP
 function chainedList(data){
@@ -581,10 +581,13 @@ console.log(leng(list));
 console.log(isEmpty(list));
 console.log(isEmpty({next:undefined,data:undefined}));
 </script>
+
+<pre id="source_3"></pre>
 </div>
 </div>
 
 <script>
+$("#source_3").text($("#code_3").text());
     $(".testresults").executeTests(tests);
 </script>
 </body>
