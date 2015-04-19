@@ -199,7 +199,7 @@ Testergebnisse
   }
 
   // Experiments
-  for(i = 0; i < 100; i ++) {
+  for(var i = 0; i < 100; i ++) {
     ad_1_1_data.push({
       experiment : i,
       value : new MyClass().value
@@ -312,8 +312,18 @@ Testergebnisse
             return res;
         }
     } 
-    
-    var fib=function(n){
+	
+    var fib3 = function(n){
+		return fib3_(n, 0, 1);
+	}
+	var fib3_ = function(n, suma, sumb){
+		if(n<1){
+			return sumb;
+		}
+		return fib3_(n-1,sumb,suma+sumb);
+	}
+	
+    var fib4=function(n){
         var suma=0,sumb=1;
         for(var i=0; i<=n;i++)
         {
@@ -330,7 +340,7 @@ Testergebnisse
         for(var i=0; i<10;i++)
         {
             //console.log(i + ' ' + fib(i));
-            $("#fibnaiv").append('<li class="list-group-item">fib( '+i+" ) = "+fib(i)+"</li>");
+            $("#fibnaiv").append('<li class="list-group-item">fib4( '+i+" ) = "+fib4(i)+"</li>");
         }   
     });
   
@@ -363,7 +373,7 @@ Testergebnisse
     var start = new Date();
     var result = 0;
     for(var x=0;x<iter;x++){
-        result=fib(i);
+        result=fib4(i);
         console.log(result+x);
     }
     var stop = new Date();
@@ -387,6 +397,15 @@ Testergebnisse
     var stop = new Date();
     var startnum2=(start.getTime())+start.getMilliseconds()/1000;
     var stopnum2=(stop.getTime())+stop.getMilliseconds()/1000;    
+	
+	var start = new Date();
+    for(var x=0;x<iter;x++){
+        result=fib3(i);
+        console.log(result+x);
+    }
+    var stop = new Date();
+    var startnum3=(start.getTime())+start.getMilliseconds()/1000;
+    var stopnum3=(stop.getTime())+stop.getMilliseconds()/1000;    
     
    
     
@@ -395,6 +414,7 @@ Testergebnisse
       experiment : i,
       memory : stopnum2 - startnum2,
       linear : stopnum - startnum,
+      linearRecursiv : stopnum3 - startnum3,
       naiv : stopnum1 - startnum1
       });
       console.log(i);
@@ -419,10 +439,18 @@ Testergebnisse
   
   // Tests
   assert(ad_1_2_data.length === 10, "experiments have collected data");
-  assertTest("ad-1-2-results",fib(0),1,"Fibonacci von 0 ist 1");
-  assertTest("ad-1-2-results",fib(1),1,"Fibonacci von 1 ist 1");
-  assertTest("ad-1-2-results",fib(2),2,"Fibonacci von 2 ist 2");
-  assertTest("ad-1-2-results",fib(9),55,"Fibonacci von 9 ist 55");
+  assertTest("ad-1-2-results",fib4(0),1,"Fibonacci von 0 ist 1");
+  assertTest("ad-1-2-results",fib4(1),1,"Fibonacci von 1 ist 1");
+  assertTest("ad-1-2-results",fib4(2),2,"Fibonacci von 2 ist 2");
+  assertTest("ad-1-2-results",fib4(9),55,"Fibonacci von 9 ist 55");
+  
+  //Linear Recursion
+  assertTest("ad-1-2-results",fib3(0),1,"Fibonacci von 0 ist 1");
+  assertTest("ad-1-2-results",fib3(1),1,"Fibonacci von 1 ist 1");
+  assertTest("ad-1-2-results",fib3(2),2,"Fibonacci von 2 ist 2");
+  assertTest("ad-1-2-results",fib3(9),55,"Fibonacci von 9 ist 55");
+ 
+
 </script>
 <!-- dieser Code zeigt die Implementierung und die Tests an -->
 <script>
@@ -454,10 +482,10 @@ exp = new Morris.Line({
   // The name of the data record attribute that contains x-values.
   xkey: 'experiment',
   // A list of names of data record attributes that contain y-values.
-  ykeys: ['naiv','linear','memory'],
+  ykeys: ['naiv','linear','linearRecursiv','memory'],
   // Labels for the ykeys -- will be displayed when you hover over the
   // chart.
-  labels: ['NAIV','linear','memory']
+  labels: ['naiv','linear','linearRecursiv','memory']
 });
 </script>
 
@@ -542,44 +570,233 @@ l.cons(1234);
 l.cons(l.leng());
 
 //procedural
-var list={data:"foofoo",next:undefined}
+var chainList =  {
+	count: 0,
+	
+	emptyList: function(x){
+		return {data: x, next: undefined};
+	},
 
-var cons = function(data,list){
-    var item=list;
-    while(item.next)
-    {
-        item=item.next;
-    }
-    
-    item.next={data:data,next:undefined};
-    console.log(JSON.stringify(list));
+	getCounter: function(){
+		return this.count;
+	},
+
+	resetCounter: function(){
+		this.count = 0;
+	},
+
+	append: function(x,list){
+		var item=list;
+		this.count++;
+		while(item.next)
+		{
+			this.count++;
+			item=item.next;
+			this.count++;
+		}
+		this.count++;
+		item.next = this.emptyList(x);
+		return list;
+	},
+
+	cons: function(x,list){
+		this.count++;
+		var element = this.emptyList(x);
+		element.next = list;
+		return element;
+	},
+
+	head: function(list){
+		this.count++;
+		return list.data;
+	},
+
+	tail: function(list){
+		this.count++;
+		var nextElem = list.next;
+		if( nextElem === undefined){
+			return this.emptyList();
+		}
+		return nextElem;
+	},
+
+	leng: function(list)
+	{
+		this.count++;
+		var nextElem = list.next;
+		if(nextElem)
+		{return 1 + this.leng(nextElem);}
+		else
+		{return 1;}
+	},
+
+	isEmpty: function(list){
+		this.count++;
+		return list.next===undefined && list.data===undefined;
+	},
+
+	insert: function(x,n,list){
+		if(n<=0){
+			return this.cons(x,list);
+		}else{
+			this.count++;
+			return this.cons(list.data,this.insert(x,(n-1),this.tail(list)));
+		}
+	/*
+		if(n>0){
+			count++;
+			insert(x,n-1,list.next);
+		}else{
+			count++;
+			var oldNext = list.next;
+			count++;
+			list.next={data: x, next: oldNext};
+		}
+		return list;
+	*/
+	}
 }
 
-var head = function(list){
-    return list.data;
+
+// ArraybasierteListe
+var arrayList =  {
+	count: 0,
+	
+	emptyList: function(){
+		return [];
+	},
+
+	getCounter: function(){
+		return this.count;
+	},
+
+	resetCounter: function(){
+		this.count = 0;
+	},
+
+	append: function(x,list){
+		var newArray = [];
+		for(var index in list){
+			this.count += 2;
+			newArray.push(list[index]);
+		}
+		this.count++;
+		newArray.push(x);
+		return newArray;
+	},
+
+	cons: function(x,list){
+		var newArray = [];
+		this.count++;
+		newArray.push(x);
+		for(var index in list){
+			this.count += 2;
+			newArray.push(list[index]);
+		}
+		return newArray;
+	},
+
+	head: function(list){
+		this.count++;
+		return list[0];
+	},
+
+	tail: function(list){
+		if(this.isEmpty(list)||this.leng(list) == 1){
+			return this.emptyList();
+		}else{
+			var newArray = this.emptyList();
+			for(var i=1; i<this.leng(list);i++){
+				this.count += 2;
+				newArray.push(list[i]);
+			}
+			return newArray;
+		}
+	},
+
+	leng: function(list)
+	{
+		return list.length;
+	},
+
+	isEmpty: function(list){
+		return this.leng(list)===0;
+	},
+
+	insert: function(x,n,list){
+		var newArray = this.emptyList();
+		var index = 0;
+		for(index in list){
+			if(index==n){
+				newArray.push(x);
+			}
+			this.count+=2;
+			newArray.push(list[index]);
+		}
+		if(index < n){
+			newArray.push(x);
+		}
+		return newArray;
+	}
 }
 
-var tail = function(list){
-    return list.next;
+var chainErstesExperiment = function(n){
+	chainList.resetCounter();
+	var list = chainList.emptyList();
+	for(var i = 0; i<n; i++){
+		list = chainList.cons(i+1,list);
+	}
+	console.log("Erstes Experiment mit n = " + n + " Benötigt " + chainList.getCounter() + " Dereferenzierungen");
 }
 
-var leng =function(list)
-{
-    if(list.next)
-    {return 1 + leng(list.next);}
-    else
-    {return 1;}
+var chainZweitesExperiment = function(n){
+	chainList.resetCounter();
+	var list = chainList.emptyList();
+	for(var i = 0; i<n; i++){
+		chainList.append(i+1,list);
+	}
+	console.log("Zweites Experiment mit n = " + n + " Benötigt " + chainList.getCounter() + " Dereferenzierungen");
 }
 
-var isEmpty = function(list){
- return list.next===undefined && list.data===undefined;
+var chainDrittesExperiment = function(n){
+	chainList.resetCounter();
+	var list = chainList.emptyList();
+	for(var i = 0; i<n; i++){
+		var pos =Math.floor(Math.random() * i);
+		//console.log(i + ". Pos: " + pos); 
+		list = chainList.insert(i,pos,list);
+	}
+	console.log("Drittes Experiment mit n = " + n + " Benötigt " + chainList.getCounter() + " Dereferenzierungen");
 }
 
-cons("x,y,z",list);
-cons("x,y,q",list);
-console.log(leng(list));
-console.log(isEmpty(list));
-console.log(isEmpty({next:undefined,data:undefined}));
+var arrayErstesExperiment = function(n){
+	arrayList.resetCounter();
+	var list = arrayList.emptyList();
+	for(var i = 0; i<n; i++){
+		list = arrayList.cons(i+1,list);
+	}
+	console.log("Erstes Experiment mit n = " + n + " Benötigt " + arrayList.getCounter() + " Dereferenzierungen");
+}
+
+var arrayZweitesExperiment = function(n){
+	arrayList.resetCounter();
+	var list = arrayList.emptyList();
+	for(var i = 0; i<n; i++){
+		list = arrayList.append(i+1,list);
+	}
+	console.log("Zweites Experiment mit n = " + n + " Benötigt " + arrayList.getCounter() + " Dereferenzierungen");
+}
+
+var arrayDrittesExperiment = function(n){
+	arrayList.resetCounter();
+	var list = arrayList.emptyList();
+	for(var i = 0; i<n; i++){
+		var pos =Math.floor(Math.random() * i);
+		//console.log(i + ". Pos: " + pos); 
+		list = arrayList.insert(i,pos,list);
+	}
+	console.log("Drittes Experiment mit n = " + n + " Benötigt " + arrayList.getCounter() + " Dereferenzierungen");
+}
 </script>
 
 <pre id="source_3"></pre>
