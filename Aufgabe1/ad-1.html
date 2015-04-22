@@ -100,7 +100,7 @@ var info = {
     aufgabe: "Aufgabenblatt 1",
     abgabe: "KW17?",
     autor: ["Torben Haug","Jan Rübbelke"],  
-    progress: 70
+    progress: 110
 };
 
 $(document).ready(function(){
@@ -180,15 +180,32 @@ Implementierung
 <!-- In diesem Element wird der Inhalt des scripts mit der ID ad-1-1-results angezeigt -->
 <pre id="ad-1-1-source"></pre>
 <h3>
-Testergebnisse
+Testergebnisse <a class="btn btn-primary" data-toggle="collapse" href="#collapseTEST1">
+  show
+</a>
 </h3>
-<div id="ad-1-1-results" class="testresults"></div>
+<div class="collapse" id="collapseTEST1">
+  <div class="well testresults" id="ad-1-1-results">
+    ...
+  </div>
+</div>
 <!-- Code und Tests hier hin -->
 <script id="ad-1-1-code">
 
   var steps = function(x,y,d)
   {
-    return Math.ceil( (y - x) / d );
+    var res = Math.floor( (y - x) / d )+1;
+    return res>=0?res:0;
+  }
+  
+  var stepsnaiv = function(x,y,d){
+    if(x > y)
+    {
+        return 0;
+    }
+    else{
+        return 1 + stepsnaiv(x+d,y,d);
+    }
   }
 
   var ad_1_1_data = [];
@@ -202,22 +219,24 @@ Testergebnisse
   for(var i = 0; i < 100; i ++) {
     ad_1_1_data.push({
       experiment : i,
-      value : new MyClass().value
+      valuea : steps(0,i,5),
+      valueb : steps(22,i,5),
+      valuec : steps(0,i,10),
+      valued : stepsnaiv(1,i,5),
       });
   }
 
   // Tests
-  var ad1_1_test = function(){
-    assert(steps(15,80,30)===3, "Funktion Steps rechnet richtig");
-    assert(ad_1_1_data.length === 100, "experiments have collected data");
-    assert(typeof(steps) === 'function', "function 'steps' not implemented");
-  }
+  assertTest("ad-1-1-results",steps(15,80,30),3,"steps(15,80,30)=3");
+  assertTest("ad-1-1-results",steps(15,60,30),2,"steps(15,60,30)=2");
+  assertTest("ad-1-1-results",steps(15,75,30),3,"steps(15,75,30)=3");
+  assertTest("ad-1-1-results",stepsnaiv(15,75,30),3,"stepsnaiv(15,75,30)=3");
   
-  
+  /*
   assertTest("ad-1-1-results",steps(15,80,30),3,"Funktion Steps rechnet richtig");
   assertTest("ad-1-1-results",1,true,"Beispiel für Warning!");
   assertTest("ad-1-1-results",1,false,"Beispiel für FAILED!");
-  
+  */
  
 </script>
 <!-- dieser Code zeigt die Implementierung und die Tests an -->
@@ -244,10 +263,10 @@ new Morris.Line({
   // The name of the data record attribute that contains x-values.
   xkey: 'experiment',
   // A list of names of data record attributes that contain y-values.
-  ykeys: ['value'],
+  ykeys: ['valuea','valueb','valuec','valued'],
   // Labels for the ykeys -- will be displayed when you hover over the
   // chart.
-  labels: ['Value']
+  labels: ['steps(0,i,5)','steps(12,i,5)','steps(0,i,10)','stepsnaiv(1,i,5)']
 });
 </script>
 
@@ -274,9 +293,15 @@ Implementierung
 <!-- In diesem Element wird der Inhalt des scripts mit der ID ad-1-2-code angezeigt -->
 <pre id="ad-1-2-source"></pre>
 <h3>
-Testergebnisse
+Testergebnisse <a class="btn btn-primary" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+  show
+</a>
 </h3>
-<div id="ad-1-2-results" class="testresults"></div>
+<div class="collapse" id="collapseExample">
+  <div class="well testresults" id="ad-1-2-results">
+    ...
+  </div>
+</div>
 <!-- Code und Tests hier hin -->
 <script id="ad-1-2-code">
   
@@ -333,10 +358,11 @@ Testergebnisse
         }
         return suma;
     }    
-    
-    
-    
-    $().ready(function(){
+</script>
+
+<script>
+
+   $().ready(function(){
         for(var i=0; i<10;i++)
         {
             //console.log(i + ' ' + fib(i));
@@ -419,41 +445,20 @@ Testergebnisse
       });
       console.log(i);
   }
-  /*
-      mem={};
-    for(var x=1000;x>1;x--){
-        result=fib2(x);
-        console.log(x);
-    } 
-    
-          mem={};
-    for(var x=0;x<=3000;x++){
-        result=fib2(x);
-        console.log(x);
-    }
-    */
   exp.setData(ad_1_2_data);
   
   };
   
+  var fibAlgorithmus = [fib1,fib2,fib3,fib4];
   
-  // Tests
-  assert(ad_1_2_data.length === 10, "experiments have collected data");
-  assertTest("ad-1-2-results",fib4(0),1,"Fibonacci von 0 ist 1");
-  assertTest("ad-1-2-results",fib4(1),1,"Fibonacci von 1 ist 1");
-  assertTest("ad-1-2-results",fib4(2),2,"Fibonacci von 2 ist 2");
-  assertTest("ad-1-2-results",fib4(9),55,"Fibonacci von 9 ist 55");
+  var fibErwartung   = {0:1,1:1,2:2,9:55}
   
-  //Linear Recursion
-  assertTest("ad-1-2-results",fib3(0),1,"Fibonacci von 0 ist 1");
-  assertTest("ad-1-2-results",fib3(1),1,"Fibonacci von 1 ist 1");
-  assertTest("ad-1-2-results",fib3(2),2,"Fibonacci von 2 ist 2");
-  assertTest("ad-1-2-results",fib3(9),55,"Fibonacci von 9 ist 55");
- 
+  for(var index in fibAlgorithmus)
+  {
+    for(var erg in fibErwartung)
+    assertTest("ad-1-2-results",fibAlgorithmus[index](erg),fibErwartung[erg],"Algorithmus ["+index+"] für "+erg);
+  }
 
-</script>
-<!-- dieser Code zeigt die Implementierung und die Tests an -->
-<script>
 $('pre#ad-1-2-source').html($('#ad-1-2-code').html())
 </script>
 
@@ -493,82 +498,6 @@ exp = new Morris.Line({
 <div class="row">
 <h2>Aufgabe 3</h2>
 <script id="code_3">
-
-//OOP
-function chainedList(data){
-
-    this.data=data;
-    this.next=undefined;
-    
-    this.cons = function(elem){
-        if(this.next!==undefined)
-        {this.next.cons(elem);}
-        else
-        {this.next=new chainedList(elem);}
-        return this;
-    };
-    
-    this.get = function(idx){
-        if(idx>0){
-            if(this.next!==undefined){
-                return this.next.get(idx-1);
-            }
-            return undefined;
-        }
-        else
-        {
-            return this.data;
-        }
-    }
-    
-    this.set = function(idx,val)
-    {
-        if(idx>0){
-            if(this.next!==undefined){
-                this.next.set(idx-1,val);
-            }
-            return undefined;
-        }
-        else
-        {
-            this.data=val;
-            return val;
-        }    
-    }
-    
-    this.head = function(){
-        return this.data;
-    };
-    
-    this.tail = function(){
-        return this.next;
-    };
-    
-    this.leng = function(){
-    if(this.next)
-    {
-        return this.next.leng() + 1;
-    }
-    else
-    {
-        return 1;
-    }
-    };
-    
-    this.isEmpty = function(){
-        return this.data === undefined && this.next === undefined;
-    };
-    
-    this.toString = function(){
-        return JSON.stringify(this.data) + (this.next!==undefined ? " , " + this.next.toString() : "");
-    }
-}
-
-var l = new chainedList('a');
-l.cons("Hallo");
-l.cons(1234);
-l.cons(l.leng());
-
 //procedural
 var chainList =  {
 	count: 0,
@@ -739,6 +668,82 @@ var arrayList =  {
 		return newArray;
 	}
 }
+</script>
+<script>
+//OOP
+function chainedList(data){
+
+    this.data=data;
+    this.next=undefined;
+    
+    this.cons = function(elem){
+        if(this.next!==undefined)
+        {this.next.cons(elem);}
+        else
+        {this.next=new chainedList(elem);}
+        return this;
+    };
+    
+    this.get = function(idx){
+        if(idx>0){
+            if(this.next!==undefined){
+                return this.next.get(idx-1);
+            }
+            return undefined;
+        }
+        else
+        {
+            return this.data;
+        }
+    }
+    
+    this.set = function(idx,val)
+    {
+        if(idx>0){
+            if(this.next!==undefined){
+                this.next.set(idx-1,val);
+            }
+            return undefined;
+        }
+        else
+        {
+            this.data=val;
+            return val;
+        }    
+    }
+    
+    this.head = function(){
+        return this.data;
+    };
+    
+    this.tail = function(){
+        return this.next;
+    };
+    
+    this.leng = function(){
+    if(this.next)
+    {
+        return this.next.leng() + 1;
+    }
+    else
+    {
+        return 1;
+    }
+    };
+    
+    this.isEmpty = function(){
+        return this.data === undefined && this.next === undefined;
+    };
+    
+    this.toString = function(){
+        return JSON.stringify(this.data) + (this.next!==undefined ? " , " + this.next.toString() : "");
+    }
+}
+
+var l = new chainedList('a');
+l.cons("Hallo");
+l.cons(1234);
+l.cons(l.leng());
 
 var chainErstesExperiment = function(n){
 	chainList.resetCounter();
@@ -747,6 +752,7 @@ var chainErstesExperiment = function(n){
 		list = chainList.cons(i+1,list);
 	}
 	console.log("Erstes Experiment mit n = " + n + " Benötigt " + chainList.getCounter() + " Dereferenzierungen");
+    return chainList.getCounter();
 }
 
 var chainZweitesExperiment = function(n){
@@ -756,6 +762,7 @@ var chainZweitesExperiment = function(n){
 		chainList.append(i+1,list);
 	}
 	console.log("Zweites Experiment mit n = " + n + " Benötigt " + chainList.getCounter() + " Dereferenzierungen");
+    return chainList.getCounter();
 }
 
 var chainDrittesExperiment = function(n){
@@ -767,6 +774,7 @@ var chainDrittesExperiment = function(n){
 		list = chainList.insert(i,pos,list);
 	}
 	console.log("Drittes Experiment mit n = " + n + " Benötigt " + chainList.getCounter() + " Dereferenzierungen");
+    return chainList.getCounter();
 }
 
 var arrayErstesExperiment = function(n){
@@ -776,6 +784,7 @@ var arrayErstesExperiment = function(n){
 		list = arrayList.cons(i+1,list);
 	}
 	console.log("Erstes Experiment mit n = " + n + " Benötigt " + arrayList.getCounter() + " Dereferenzierungen");
+    return arrayList.getCounter();
 }
 
 var arrayZweitesExperiment = function(n){
@@ -785,6 +794,7 @@ var arrayZweitesExperiment = function(n){
 		list = arrayList.append(i+1,list);
 	}
 	console.log("Zweites Experiment mit n = " + n + " Benötigt " + arrayList.getCounter() + " Dereferenzierungen");
+    return arrayList.getCounter();
 }
 
 var arrayDrittesExperiment = function(n){
@@ -796,13 +806,52 @@ var arrayDrittesExperiment = function(n){
 		list = arrayList.insert(i,pos,list);
 	}
 	console.log("Drittes Experiment mit n = " + n + " Benötigt " + arrayList.getCounter() + " Dereferenzierungen");
+    return arrayList.getCounter();
 }
+
+ad_1_3_data=[];
+
+var executeExperimente = function(n)
+{
+var res={};
+
+res.C1 = chainErstesExperiment(n);
+res.C2 = chainZweitesExperiment(n);
+res.C3 = chainDrittesExperiment(n);
+
+res.A1 = arrayErstesExperiment(n);
+res.A2 = arrayZweitesExperiment(n);
+res.A3 = arrayDrittesExperiment(n);
+res.experiment=(n);
+console.log(res);
+ad_1_3_data.push(res);
+
+exp3.setData(ad_1_3_data);
+}
+
 </script>
-
 <pre id="source_3"></pre>
+<div id="ad-1-3-experiments"></div>
 </div>
 </div>
-
+<script>
+exp3 = new Morris.Line({
+  // ID of the element in which to draw the chart.
+  element: 'ad-1-3-experiments',
+  // do values relate to dates (time)?
+  parseTime: false,
+  // Chart data records -- each entry in this array corresponds to a point on
+  // the chart.
+  data: ad_1_3_data,
+  // The name of the data record attribute that contains x-values.
+  xkey: 'experiment',
+  // A list of names of data record attributes that contain y-values.
+  ykeys: ['C1','C2','C3','A1','A2','A3'],
+  // Labels for the ykeys -- will be displayed when you hover over the
+  // chart.
+  labels: ['ChainList EX1','ChainList EX2','ChainList EX3','SequList EX1','SequList EX2','SequList EX3']
+});
+</script>
 <script>
 $("#source_3").text($("#code_3").text());
     $(".testresults").executeTests(tests);
