@@ -76,6 +76,10 @@
     tests[Aufgabe]+=assertEqual(call,value,info);
   }
   
+    assertInfo = function(Aufgabe,info)
+  {
+    tests[Aufgabe]+=msg = '<div class="alert alert-info" role="alert"><strong>INFO:</strong> ' + info + '</div>';
+  }
 
 </script>
 </head>
@@ -165,13 +169,13 @@ Antwort 1
 </h2>
 <ol>
 <li>
-Anhand der des delta X / Schrittweite.
+TODO
 </li>
 <li>
-O(Xn), da wenn x = 1, Y = 1, d = 1 ein linearer anstieg zu verzeichnen ist.
+TODO
 </li>
 <li>
-Siehe Implementierung
+TODO
 </li>
 </ol>
 <h3>
@@ -194,11 +198,13 @@ Testergebnisse <a class="btn btn-primary" data-toggle="collapse" href="#collapse
 
   var steps = function(x,y,d)
   {
+    if(d<=0){return Infinity;}
     var res = Math.floor( (y - x) / d )+1;
     return res>=0?res:0;
   }
   
   var stepsnaiv = function(x,y,d){
+    if(d<=0){return Infinity;}
     if(x > y)
     {
         return 0;
@@ -229,7 +235,7 @@ Testergebnisse <a class="btn btn-primary" data-toggle="collapse" href="#collapse
   // Tests
   assertTest("ad-1-1-results",steps(15,80,30),3,"steps(15,80,30)=3");
   assertTest("ad-1-1-results",steps(15,60,30),2,"steps(15,60,30)=2");
-  assertTest("ad-1-1-results",steps(15,75,30),3,"steps(15,75,30)=3");
+  assertTest("ad-1-1-results",steps(15,16,0),false,"steps(15,75,30)=3");
   assertTest("ad-1-1-results",stepsnaiv(15,75,30),3,"stepsnaiv(15,75,30)=3");
   
   /*
@@ -250,7 +256,7 @@ $('pre#ad-1-1-source').html($('#ad-1-1-code').html())
 Experimente
 </h3>
 
-<div id="ad-1-1-experiments" style="height: 250px;"></div>
+<div id="ad-1-1-experiments" style="height: 250px;display:none;"></div>
 <script>
 new Morris.Line({
   // ID of the element in which to draw the chart.
@@ -274,17 +280,44 @@ new Morris.Line({
 <h2>
 Aufgabe 2
 </h2>
-        {
-Fibonacci NAIV:
-<ul id="fibnaiv" class="list-group">
+<ol>
+<li>Implementieren Sie fib direkt (also naiv).
+<li>Bestimmen Sie experimentell den Zeitaufwand von fib und stellen Sie das Ergebnis graphisch
+dar. Geben Sie die gemessene Laufzeitklasse möglichst präzise in der O-Notation
+an.
+<li>Die Fibonacci Zahlen können auch schneller berechnet werden. Schreiben Sie jetzt zwei
+verbesserte Funktionen fib2 und fib3, die rekursiv mit linearem Zeitaufwand ablaufen
+(O(n)).
+<ul><li>fib2 soll memoization verwenden.
+<li>fib3 soll ohne memoization auskommen.</ul>
+<li>Bestimmen Sie experimentell den jeweiligen Zeitaufwand von fib2 und fib3 und stellen
+Sie die Ergebnisse graphisch dar.
+<li>Erläutern Sie, ob und wie sich Ihre Implementierung fib2 und fib3 im Platzaufwand
+unterscheiden.
+<li>Implementieren Sie fib4 als iterative Version von fib3.
+</ol>
 
-</ul>
 <h2>
 Antwort 2
 </h2>
+<ul id="fibnaiv" class="list-group">
+
+</ul>
+
 <ol>
 <li>
-TODO
+fib2(n) benötigt im Verhältnis zu der reinen Naiven Lösung mehr Speicher, jedoch werden die Zwischenschritte
+(Mehrfachaufrufe) reduziert, da durch die in der Lookuptable mem gespeicherten Ergebnisse nicht erneut 
+berechnet werden müssen.<br>
+fib3(n) hier gilt ähnlich zu fib2 ein linearer Platzbedarf, jedoch verliert die Funktion nach Abschluss die
+Zwischenergebnisse und kann bei erneuter Berechnung nicht darauf zurückgreifen. 
+<br>
+Platzbedarf:
+<ul>
+<li>fib2: O(n)</li>
+<li>fib3: O(n)</li>
+</ul>
+
 </li>
 </ol>
 <h3>
@@ -305,7 +338,9 @@ Testergebnisse <a class="btn btn-primary" data-toggle="collapse" href="#collapse
 <!-- Code und Tests hier hin -->
 <script id="ad-1-2-code">
   
+    var fibcount=0;
     var fib1=function(n){
+        fibcount++;
         if(n<=1){
         return 1;
         }
@@ -317,6 +352,7 @@ Testergebnisse <a class="btn btn-primary" data-toggle="collapse" href="#collapse
     var mem={};
     
     var fib2=function(n){
+        fibcount++;
         if (mem[n])
         {
             console.log("fib2("+n+") MEMO =>"+mem[n]);
@@ -342,6 +378,7 @@ Testergebnisse <a class="btn btn-primary" data-toggle="collapse" href="#collapse
 		return fib3_(n, 0, 1);
 	}
 	var fib3_ = function(n, suma, sumb){
+        fibcount++;
 		if(n<1){
 			return sumb;
 		}
@@ -352,6 +389,7 @@ Testergebnisse <a class="btn btn-primary" data-toggle="collapse" href="#collapse
         var suma=0,sumb=1;
         for(var i=0; i<=n;i++)
         {
+        fibcount++;
             var summe=suma+sumb;
             sumb= suma;
             suma=summe;
@@ -393,55 +431,32 @@ Testergebnisse <a class="btn btn-primary" data-toggle="collapse" href="#collapse
   
   // Experiments 
   
-  var bathfib = function(fibNmax,iter){
+  var bathfib = function(fibNmax){
   ad_1_2_data = [];
   for(i = 0; i <= fibNmax; i ++) {
-    var start = new Date();
-    var result = 0;
-    for(var x=0;x<iter;x++){
-        result=fib4(i);
-        console.log(result+x);
+    var naivT = undefined;
+    if(i<=30){
+    fibcount=0;
+    fib1(i);
+    var naivT = fibcount;
     }
-    var stop = new Date();
-    var startnum=(start.getTime())+start.getMilliseconds()/1000;
-    var stopnum=(stop.getTime())+stop.getMilliseconds()/1000;
-    
-    var start = new Date();
-    for(var x=0;x<iter;x++){
-        result=fib1(i);
-        console.log(result+x);
-    }
-    var stop = new Date();
-    var startnum1=(start.getTime())+start.getMilliseconds()/1000;
-    var stopnum1=(stop.getTime())+stop.getMilliseconds()/1000;    
-    
-    var start = new Date();
-    for(var x=0;x<iter;x++){
-        result=fib2(i);
-        console.log(result+x);
-    }
-    var stop = new Date();
-    var startnum2=(start.getTime())+start.getMilliseconds()/1000;
-    var stopnum2=(stop.getTime())+stop.getMilliseconds()/1000;    
-	
-	var start = new Date();
-    for(var x=0;x<iter;x++){
-        result=fib3(i);
-        console.log(result+x);
-    }
-    var stop = new Date();
-    var startnum3=(start.getTime())+start.getMilliseconds()/1000;
-    var stopnum3=(stop.getTime())+stop.getMilliseconds()/1000;    
-    
-   
-    
-    //console.log(stopnum - startnum);
+    mem={};
+    fibcount=0;
+    fib2(i);
+    var memoryT = fibcount;
+    fibcount=0;
+    fib3(i);
+    var linrecT = fibcount;
+    fibcount=0;
+    fib4(i);
+    var linearT = fibcount;
+
     ad_1_2_data.push({
       experiment : i,
-      memory : stopnum2 - startnum2,
-      linear : stopnum - startnum,
-      linearRecursiv : stopnum3 - startnum3,
-      naiv : stopnum1 - startnum1
+      memory : memoryT,
+      linear : linearT,
+      linearRecursiv : linrecT,
+      naiv : naivT
       });
       console.log(i);
   }
@@ -465,15 +480,13 @@ $('pre#ad-1-2-source').html($('#ad-1-2-code').html())
 <h3>
 Experimente
 </h3>
-<button class="btn btn-danger" onclick="bathfib(1000,1)">fibX(n) (n=[0,1000]) je 1 mal</button>
-<button class="btn btn-danger" onclick="bathfib(30,100)">fibX(n) (n=[0,30]) je 100 mal</button>
-<button class="btn btn-warning" onclick="bathfib(30,10)">fibX(n) (n=[0,30]) je 10 mal</button>
-<button class="btn btn-success" onclick="bathfib(20,10)">fibX(n) (n=[0,20]) je 10 mal</button>
-<button class="btn btn-success" onclick="bathfib(10,10)">fibX(n) (n=[0,10]) je 10 mal</button>
-<div class="progress">
-      <div class="progress-bar  progress-bar-striped active" id="exprog" style="width: 0%">
-        <span></span>
-      </div></div>
+<button class="btn btn-danger" onclick="bathfib(70)">fibX(70)</button>
+<button class="btn btn-danger"  onclick="bathfib(50)">fibX(50)</button>
+<button class="btn btn-warning" onclick="bathfib(30)">fibX(30)</button>
+<button class="btn btn-success" onclick="bathfib(20)" >fibX(20)</button>
+<button class="btn btn-success" onclick="bathfib(10)" >fibX(10)</button>
+<br><span>Die naive Funktion rechnet nur bis 30 in annehmbarer Zeit und wird danach nicht zur weiteren Berechnung genutzt</span>
+<br>
 <div id="ad-1-2-experiments" style="height: 250px;"></div>
 <script>
 exp = new Morris.Line({
@@ -568,9 +581,19 @@ var chainList =  {
 		if(n<=0){
 			return this.cons(x,list);
 		}else{
+        
 			this.count++;
 			return this.cons(list.data,this.insert(x,(n-1),this.tail(list)));
-		}
+		/*
+        var topReferenz
+            while(n>1)
+            {
+            
+            }
+            return this.insert(x,n-1,)*/
+        }
+           
+        
 	/*
 		if(n>0){
 			count++;
@@ -663,6 +686,7 @@ var arrayList =  {
 			newArray.push(list[index]);
 		}
 		if(index < n){
+            this.count++;
 			newArray.push(x);
 		}
 		return newArray;
@@ -815,24 +839,35 @@ var executeExperimente = function(n)
 {
 var res={};
 
-res.C1 = chainErstesExperiment(n);
-res.C2 = chainZweitesExperiment(n);
-res.C3 = chainDrittesExperiment(n);
+res.C1 = chainErstesExperiment(n)/n;
+res.C2 = chainZweitesExperiment(n)/n;
+res.C3 = chainDrittesExperiment(n)/n;
 
-res.A1 = arrayErstesExperiment(n);
-res.A2 = arrayZweitesExperiment(n);
-res.A3 = arrayDrittesExperiment(n);
+res.A1 = arrayErstesExperiment(n)/n;
+res.A2 = arrayZweitesExperiment(n)/n;
+res.A3 = arrayDrittesExperiment(n)/n;
 res.experiment=(n);
 console.log(res);
 ad_1_3_data.push(res);
-
 exp3.setData(ad_1_3_data);
-}
 
+}
 </script>
 <pre id="source_3"></pre>
 <div id="ad-1-3-experiments"></div>
+<button class="btn btn-success" onclick="doExperiment()">Ein weiteres Experiment ausführen</button>
+<button class="btn btn-success" onclick="do10Experiment()">10 weitere Experimente ausführen</button>
 </div>
+</div>
+<h3>
+Testergebnisse <a class="btn btn-primary" data-toggle="collapse" href="#collapseTEST3">
+  show
+</a>
+</h3>
+<div class="collapse" id="collapseTEST3">
+  <div class="well testresults" id="ad-1-3-results">
+    ...
+  </div>
 </div>
 <script>
 exp3 = new Morris.Line({
@@ -851,6 +886,54 @@ exp3 = new Morris.Line({
   // chart.
   labels: ['ChainList EX1','ChainList EX2','ChainList EX3','SequList EX1','SequList EX2','SequList EX3']
 });
+var excount=1;
+var doExperiment = function()
+{
+    executeExperimente(excount);
+    excount+=1;
+}
+
+var do10Experiment = function()
+{
+    for(var i=0;i<10;i++)
+    {
+    doExperiment();
+    }
+}
+
+
+var myList=chainList.emptyList();
+assertTest("ad-1-3-results",chainList.isEmpty(myList),true,"Leere verkettete Liste ist leer");
+assertTest("ad-1-3-results",chainList.leng(myList),1,"Leere verkettete Liste hat die Länge 1");
+
+assertInfo("ad-1-3-results","Es werden 10 Elemente vorne angehangen");
+for(var i=0; i<10; i++)
+{
+    myList = chainList.cons(i,myList);
+}
+assertTest("ad-1-3-results",chainList.leng(myList),11,"Verkettete Liste hat die Länge 11");
+assertTest("ad-1-3-results",myList.data,9,"erstes Element hat den wert 9");
+assertTest("ad-1-3-results",chainList.head(myList),9,"Kopf der Liste ist 9");
+assertTest("ad-1-3-results",chainList.leng(chainList.tail(myList)),10,"Verkettete Liste hat die Länge 10");
+assertTest("ad-1-3-results",chainList.tail(chainList.tail((myList))).data,7,"vorvorletztes element hat den Wert 7");
+
+assertInfo("ad-1-3-results","SEQUENZIELLE LISTE");
+
+var myList=arrayList.emptyList();
+assertTest("ad-1-3-results",arrayList.isEmpty(myList),true,"Leere verkettete Liste ist leer");
+assertTest("ad-1-3-results",arrayList.leng(myList),0,"Leere verkettete Liste hat die Länge 1");
+
+assertInfo("ad-1-3-results","Es werden 10 Elemente vorne angehangen");
+for(var i=0; i<10; i++)
+{
+    myList = arrayList.cons(i,myList);
+}
+assertTest("ad-1-3-results",arrayList.leng(myList),10,"Sequenzielle Liste hat die Länge 11");
+assertTest("ad-1-3-results",myList[0],9,"erstes Element hat den wert 9");
+assertTest("ad-1-3-results",arrayList.head(myList),9,"Kopf der Liste ist 9");
+assertTest("ad-1-3-results",arrayList.leng(arrayList.tail(myList)),9,"Verkettete Liste hat die Länge 10");
+assertTest("ad-1-3-results",arrayList.tail(arrayList.tail((myList)))[0],7,"vorvorletztes element hat den Wert 7");
+
 </script>
 <script>
 $("#source_3").text($("#code_3").text());
