@@ -1,2 +1,300 @@
 Link:
 http://rise4fun.com/Dafny/iLFm
+
+
+http://rise4fun.com/Dafny/4XlP
+
+
+//Gruppe Nr. drölf,  Christopher Wolter, Torben-Dennis Mader, Konstantin Böhm
+method Main() {
+  MaxTest();
+  SearchTest();
+  MaxSortTest();
+  InsertionSortTest();
+}
+
+// ####################### 2.3.3 #####################
+
+method algorythm3(n: int) returns (result: array<int>)
+requires n > 0;
+ensures result != null;
+ensures result.Length == n;
+ensures forall o :: 0 <= o < n ==> result[o] == n - 1;
+{
+  ghost var count : int := 0;
+  var i : int := 0;
+  var arr1 := new int[n];
+  while i < n 
+  invariant i >= 0;
+  invariant count == i * 2;
+  invariant i <= n;
+  invariant i == n ==> arr1.Length == n
+  invariant forall k :: 0 <= k < i ==> arr1[k] == k;
+  {
+    arr1[i] := i;
+    i := i + 1;
+    count := count + 2;
+  }
+  
+  assert count == i * 2;
+  
+  
+  var arr2 := new int[n];
+  var j : int := 0;
+  while j < n 
+  invariant 0 <= j <= n;
+  invariant arr1[n - 1] == n - 1;
+  invariant forall u :: 0 <= u < n ==> arr1[u] <= arr1[n - 1]; 
+  invariant forall w :: 0 <= w < j ==> arr2[w] == n - 1;
+  invariant count == j + j * n * 2 + i * 2; 
+  {
+    arr2[j] := 0;
+    var k : int := n - 1;
+    ghost var count2 : int := 0;
+    while k >= 0 
+    invariant -1 <= k <= n -1;
+    invariant n > 0 ==> arr1[n - 1] == n - 1;
+    invariant forall u :: 0 <= u < n ==> arr1[u] <= arr1[n - 1];
+    invariant forall w :: 0 <= w < j ==> arr2[w] == n - 1;
+    invariant k == n - 1 ==> arr2[j] == 0;
+    invariant k < n - 1 ==> arr2[j] == n - 1;
+    invariant count2 == (n - 1 - k) * 2;
+    decreases k;
+    {
+      if arr1[k] > arr2[j] {
+        arr2[j] := arr1[k];
+      }
+      k := k - 1;
+      count2 := count2 + 2;
+    }
+    assert count2 == n * 2;
+    
+    
+    
+    j := j + 1;
+    count := count + 1 + n * 2;
+  }
+  assert n == j == i;
+  assert count == n + n * n * 2 + n * 2;
+  result := arr2;
+}
+
+// ####################### 3.1 #######################
+method Max(arr: array<int>) returns (result: int) 
+requires arr != null && arr.Length > 0;
+ensures forall k: int :: 0 <= k < arr.Length ==> result >= arr[k];
+{
+  var i : int := 1;
+  var max : int := arr[0];
+  while i < arr.Length 
+  invariant i >= 0;
+  invariant i <= arr.Length;
+  invariant max >= arr[i-1];
+  invariant forall j: int :: 0 <= j < i ==> max >= arr[j];  
+  {
+    if (max < arr[i]) {
+      max := arr[i];
+    }
+    i := i+1;
+  } 
+  result := max;
+}
+
+method MaxTest() {
+     
+  var a, i := new int[10], 0;
+  while i < a.Length { a[i], i := i + 1, i + 1; }
+  var result := Max(a);
+  print "Maximum: ";
+  print result;  
+  print "\n";
+   
+ }
+
+// ####################### 3.2 ######################
+
+method Search(a: array<int>, x: int) returns (i: int)
+   requires a != null;
+   ensures 0 <= i ==> i < a.Length && a[i] == x;
+   ensures i < 0 ==> forall k :: 0 <= k < a.Length ==> a[k] != x;
+{
+   i := 0;
+   while (i < a.Length)
+      invariant 0 <= i <= a.Length;
+      invariant forall k :: 0 <= k < i ==> a[k] != x;
+   {
+      if (a[i] == x) { return i; }
+      i := i + 1;
+   }
+   i := -1;
+}
+ 
+ method SearchTest() {
+     
+  var a, x, i := new int[10], 5, 0;
+  while i < a.Length { a[i], i := i + 1, i + 1; }
+  var result := Search(a, x);
+  print "Index of Search is: ";
+  print result;
+  print "\n";
+   
+ }
+
+ // ####################### 3.3 #######################
+predicate sorted(a: array<int>, l:int, h:int)
+ requires a != null;
+ requires a.Length >= h >= 0;
+ requires a.Length >= l >= 0;
+ reads a;
+ { 
+   forall j, k :: l <= j < k < h ==> a[j] <= a[k]
+ }
+ 
+ method MaxSort(a: array<int>) returns (b: array<int>)
+   requires a != null;
+   modifies a;
+   ensures b != null;
+   ensures sorted(b, 0, b.Length);
+   ensures multiset(b[..]) == multiset(old(b[..]));
+{
+   b := a;
+   var i, m := b.Length, 0;
+   while (i > 0)
+      decreases i;     
+      invariant 0 <= m <= i <= b.Length;
+      invariant sorted(b, i, b.Length);      
+      invariant forall k, l :: 0 <= k <= i - 1 < l < b.Length ==> b[k] <= b[l];
+      invariant multiset(b[..]) == multiset(old(b[..]));
+   {  
+      var m := MaxIdxTo(b, i - 1);
+      b[m], b[i - 1] := b[i - 1], b[m];
+      i := i - 1;
+   }
+}
+
+method MaxIdxTo(a: array<int>, j: int) returns (imax: int) 
+  requires a != null;
+  requires 0 <= j < a.Length;
+  ensures 0 <= imax <= j;
+  ensures forall k :: 0 <= k <= j ==> a[k] <= a[imax];
+ {
+   imax := 0;
+   var i := 0;
+   while (i <= j)
+      decreases j - i;
+      invariant 0 <= j < a.Length;
+      invariant 0 <= i <= j + 1;
+      invariant 0 <= imax <= j;
+      invariant forall k :: 0 <= k && k < i ==> a[imax] >= a[k];
+   {
+      if (a[i] > a[imax]) { imax := i; }
+      i := i + 1;
+   } 
+ }
+
+ method MaxSortTest() {
+     
+  var a, i := new int[10], 10;
+  while i > 0 { a[a.Length - i], i := i, i - 1; }
+  
+  print "Array before MaxSort:\n["; 
+    i := 0;
+    while i < a.Length {
+      print a[i];
+      if i + 1 != a.Length {
+        print ", ";
+      }
+      i := i + 1;
+    }
+    print "]";
+    print "\n";
+  
+  var result := MaxSort(a);
+  if result != null {
+    print "Array after MaxSort:\n["; 
+    i := 0;
+    while i < result.Length {
+      print result[i];
+      if i + 1 != result.Length {
+        print ", ";
+      }
+      i := i + 1;
+    }
+    print "]";
+    print "\n";
+  }
+  
+   
+ }
+
+
+ // ####################### 3.4 #######################
+
+
+method InsertionSort(a: array<int>) returns (b: array<int>)
+  requires a != null;
+  modifies a;
+  ensures b != null;
+  ensures sorted(b, 0, b.Length);
+  ensures multiset(old(b[..])) == multiset(b[..])
+{
+  b := a;
+  if (b.Length < 2) { return; }
+  var i, j := 1, 0;
+  while i < b.Length
+    invariant i <= b.Length;
+    invariant sorted(b, 0, i);
+    invariant multiset(b[..]) == multiset(old(b[..]));
+    decreases b.Length - i;
+  {    
+    j := i;
+    while j > 0 && b[j] <= b[j - 1]
+      invariant forall k, l :: 0 <= k < j < l <= i ==> b[k] <= b[l]; 
+      invariant sorted(b, 0, j) && sorted(b, j, i + 1);
+      invariant multiset(b[..]) == multiset(old(b[..]));
+      decreases j;
+    {
+	  b[j], b[j - 1] := b[j - 1], b[j];
+      j := j - 1;
+    }
+    i := i + 1;
+  }
+}
+
+ method InsertionSortTest() {
+     
+  var a, i := new int[10], 10;
+  while i > 0 { a[a.Length - i], i := i, i - 1; }
+  
+  print "Array before InsertionSort:\n["; 
+    i := 0;
+    while i < a.Length {
+      print a[i];
+      if i + 1 != a.Length {
+        print ", ";
+      }
+      i := i + 1;
+    }
+    print "]";
+    print "\n";
+  
+  var result := InsertionSort(a);
+  
+  
+  
+  if result != null {
+    print "Array after InsertionSort:\n["; 
+    i := 0;
+    while i < result.Length {
+      print result[i];
+      if i + 1 != result.Length {
+        print ", ";
+      }
+      i := i + 1;
+    }
+    print "]";
+    print "\n";
+  }
+  
+   
+ }
