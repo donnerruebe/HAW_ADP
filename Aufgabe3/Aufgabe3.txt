@@ -1,11 +1,11 @@
 Link:
-http://rise4fun.com/Dafny/iLFm
+http://rise4fun.com/Dafny/23K
 
 
 http://rise4fun.com/Dafny/4XlP
 
 
-//Gruppe Nr. drölf,  Christopher Wolter, Torben-Dennis Mader, Konstantin Böhm
+//Gruppe Nr. drÃ¶lf,  Christopher Wolter, Torben-Dennis Mader, Konstantin BÃ¶hm
 method Main() {
   MaxTest();
   SearchTest();
