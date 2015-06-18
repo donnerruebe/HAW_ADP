@@ -24,84 +24,86 @@
 </script>
 <script type="text/javascript"
   src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-<!-- tests -->
-<script>
+  
+  
+<script type="text/javascript" src="sh.js"></script>
+<script type="text/javascript" src="lang/sh_javascript.min.js"></script>
+<link type="text/css" rel="stylesheet" href="sh_style.css">
+  
+  
+  <!-- tests -->
+<script id="aufgabe41script">
+
+
 //4.1
-liste=[0,1,2,3,4,5,6,7,8,9,10];
-liste2=[4,4];
-ziel=7;
+liste = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+liste2 = [4, 4];
+ziel = 7;
 
-
-countSort = function(Haufen,Summe){
-    var countlist={};
-    var paare=0;
-    if(Summe <= 0)
-    {
+countSort = function (Haufen, Summe) {
+    var countlist = {};
+    var paare = 0;
+    if (Summe <= 0) {
         return -1;
     }
-    for(var idx in Haufen){
-        var Zahl=Haufen[idx];
-        if(Zahl < 0)
-        {
+    for (var idx in Haufen) {
+        var Zahl = Haufen[idx];
+        if (Zahl < 0) {
             return -2;
         }
-        countlist[Zahl]=(countlist[Zahl] || 0)+1;
+        countlist[Zahl] = (countlist[Zahl] || 0) + 1;
     }
     console.log(countlist);
-    for(var idx in countlist){
-        var anzahl=countlist[idx] || 0;
-        var anzahl2=countlist[Summe-idx] || 0;
-        if(idx==Summe-idx){
-            paare+=anzahl*0.5*(anzahl-1)
+    for (var idx in countlist) {
+        var anzahl = countlist[idx] || 0;
+        var anzahl2 = countlist[Summe - idx] || 0;
+        if (idx == Summe - idx) {
+            paare += anzahl * 0.5 * (anzahl - 1)
         }
-        if(idx<Summe-idx){
-            paare+=anzahl*anzahl2;
-            console.log("IDX: "+idx+"; A: "+anzahl+"; B:"+anzahl2);
-        }
-        else
-        {
-        return paare;
+        if (idx < Summe - idx) {
+            paare += anzahl * anzahl2;
+            console.log("IDX: " + idx + "; A: " + anzahl + "; B:" + anzahl2);
+        } else {
+            return paare;
         }
     }
     return paare;
 
 }
 
-
-var RuebeTest = function(query){
-    this.target=$(query).append("hallo");
-    console.log(this.target);
-    console.log(query);
-    this.assertEqual = function(call,value,info){
-        msg = '<div class="alert alert-danger" role="alert"><strong>FAILED:</strong> ' + info + '<br>the Result is not what you expected<br> [ '+ call +' != '+ value +' ]</div>';
-        if(call == value){
-            msg = '<div class="alert alert-warning" role="alert"><span class="glyphicon glyphicon-warning-sign"></span> ' + info + '<br>the Result may be not exacly what you expected<br> [ '+ call +' == '+ value +' ]</div>';
+var RuebeTest = function (query) {
+    this.id = query;
+    console.log($(this.id));
+    this.assertEqual = function (call, value, info) {
+        msg = '<div class="alert alert-danger" role="alert"><strong>FAILED:</strong> ' + info + '<br>the Result is not what you expected<br> [ ' + call + ' != ' + value + ' ]</div>';
+        if (call == value) {
+            msg = '<div class="alert alert-warning" role="alert"><span class="glyphicon glyphicon-warning-sign"></span> ' + info + '<br>the Result may be not exacly what you expected<br> [ ' + call + ' == ' + value + ' ]</div>';
         }
-        if(call === value){
+        if (call === value) {
             msg = '<div class="alert alert-success" role="alert"><strong>OK!</strong> ' + info + '</div>';
         }
         return msg;
     }
-  
-    this.assertTest = function(call,value,info)
-    {
-        this.target.append(assertEqual(call,value,info));
+
+    this.assertTest = function (call, value, info) {
+        information = $(this.assertEqual(call, value, info));
+        $(this.id).append(information);
     }
 
-    this.assertInfo = function(info)
-    {
-        this.target.append('<div class="alert alert-info" role="alert"><strong>INFO:</strong> ' + info + '</div>');
+    this.assertInfo = function (info) {
+        var information = $("<div class='alert alert-info' role='alert'><strong>INFO:</strong> " + info + "</div>");
+        $(this.id).append(information);
     }
 
 }
+$().ready(function () {
+    test41 = new RuebeTest("#aufgabe41results");
+    test41.assertInfo("HALLO");
+    test41.assertTest(countSort(liste, 8), 4, "aus der Liste der Zahlen 0-8 lassen sich 4 Paarungen finden um die Summe 8 zu bilden!");
+    test41.assertTest(countSort([2, 4, 4, 6], 8), 2, "aus der Liste der Zahlen [2,4,4,6] lassen sich 2 Paarungen finden um die Summe 8 zu bilden!");
 
-test41=new RuebeTest("#test41results");
-test41.assertInfo("HALLO");
-
-console.log(countSort(liste,8));
-console.log(countSort(liste2,8));
-console.log(countSort([2,4,4,6],8));
-console.log(countSort(liste,9));
+    $("#aufgabe41code").text($("#aufgabe41script").text());
+});
 </script>
 </head>
 <body>
@@ -121,11 +123,15 @@ console.log(countSort(liste,9));
 </div>
 </div>
 <div class="row">
+script
+<pre id="aufgabe41code" class="sh_javascript">X</pre>
 test
-<div id="test41results"></div>
+<div id="aufgabe41results">X</div>
 </div>
 </div>
 
-
+<script>
+$().ready(function(){sh_highlightDocument();});
+</script>
 </body>
 </html>
