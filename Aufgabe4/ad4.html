@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+<meta charset='UTF-8' />
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+
+<!-- morris graph lib -->
+<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
+<script src="http://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+<!-- LaTeX-style equations -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+</script>
+<script type="text/javascript"
+  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<!-- tests -->
+<script>
+//4.1
+liste=[0,1,2,3,4,5,6,7,8,9,10];
+liste2=[4,4];
+ziel=7;
+
+
+countSort = function(Haufen,Summe){
+    var countlist={};
+    var paare=0;
+    if(Summe <= 0)
+    {
+        return -1;
+    }
+    for(var idx in Haufen){
+        var Zahl=Haufen[idx];
+        if(Zahl < 0)
+        {
+            return -2;
+        }
+        countlist[Zahl]=(countlist[Zahl] || 0)+1;
+    }
+    console.log(countlist);
+    for(var idx in countlist){
+        var anzahl=countlist[idx] || 0;
+        var anzahl2=countlist[Summe-idx] || 0;
+        if(idx==Summe-idx){
+            paare+=anzahl*0.5*(anzahl-1)
+        }
+        if(idx<Summe-idx){
+            paare+=anzahl*anzahl2;
+            console.log("IDX: "+idx+"; A: "+anzahl+"; B:"+anzahl2);
+        }
+        else
+        {
+        return paare;
+        }
+    }
+    return paare;
+
+}
+
+
+var RuebeTest = function(query){
+    this.target=$(query).append("hallo");
+    console.log(this.target);
+    console.log(query);
+    this.assertEqual = function(call,value,info){
+        msg = '<div class="alert alert-danger" role="alert"><strong>FAILED:</strong> ' + info + '<br>the Result is not what you expected<br> [ '+ call +' != '+ value +' ]</div>';
+        if(call == value){
+            msg = '<div class="alert alert-warning" role="alert"><span class="glyphicon glyphicon-warning-sign"></span> ' + info + '<br>the Result may be not exacly what you expected<br> [ '+ call +' == '+ value +' ]</div>';
+        }
+        if(call === value){
+            msg = '<div class="alert alert-success" role="alert"><strong>OK!</strong> ' + info + '</div>';
+        }
+        return msg;
+    }
+  
+    this.assertTest = function(call,value,info)
+    {
+        this.target.append(assertEqual(call,value,info));
+    }
+
+    this.assertInfo = function(info)
+    {
+        this.target.append('<div class="alert alert-info" role="alert"><strong>INFO:</strong> ' + info + '</div>');
+    }
+
+}
+
+test41=new RuebeTest("#test41results");
+test41.assertInfo("HALLO");
+
+console.log(countSort(liste,8));
+console.log(countSort(liste2,8));
+console.log(countSort([2,4,4,6],8));
+console.log(countSort(liste,9));
+</script>
+</head>
+<body>
+<div class="container">
+<h1 id="title">Prktikum 4</h1>
+<div class="row">
+<div class="panel panel-default">
+  <div class="panel-heading">Teaminformationen</div>
+  <div class="panel-body" id="headpanel">
+  Torben Haug, Jan Rübbelke
+  <div class="progress">
+      <div class="progress-bar  progress-bar-striped active" id="sumprogress" style="width: 0%">
+        <span></span>
+      </div>
+  </div>
+  </div>
+</div>
+</div>
+<div class="row">
+test
+<div id="test41results"></div>
+</div>
+</div>
+
+
+</body>
+</html>
