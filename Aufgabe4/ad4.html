@@ -29,7 +29,34 @@
 <script type="text/javascript" src="sh.js"></script>
 <script type="text/javascript" src="lang/sh_javascript.min.js"></script>
 <link type="text/css" rel="stylesheet" href="sh_style.css">
-  
+<script>
+
+var RuebeTest = function (query) {
+    this.id = query;
+    console.log($(this.id));
+    this.assertEqual = function (call, value, info) {
+        msg = '<div class="alert alert-danger" role="alert"><strong>FAILED:</strong> ' + info + '<br>the Result is not what you expected<br> [ ' + call + ' != ' + value + ' ]</div>';
+        if (call == value) {
+            msg = '<div class="alert alert-warning" role="alert"><span class="glyphicon glyphicon-warning-sign"></span> ' + info + '<br>the Result may be not exacly what you expected<br> [ ' + call + ' == ' + value + ' ]</div>';
+        }
+        if (call === value) {
+            msg = '<div class="alert alert-success" role="alert"><strong>OK!</strong> ' + info + '</div>';
+        }
+        return msg;
+    }
+
+    this.assertTest = function (call, value, info) {
+        information = $(this.assertEqual(call, value, info));
+        $(this.id).append(information);
+    }
+
+    this.assertInfo = function (info) {
+        var information = $("<div class='alert alert-info' role='alert'><strong>INFO:</strong> " + info + "</div>");
+        $(this.id).append(information);
+    }
+
+}
+</script>  
   
   <!-- tests -->
 <script id="aufgabe41script">
@@ -71,31 +98,6 @@ countSort = function (Haufen, Summe) {
 
 }
 
-var RuebeTest = function (query) {
-    this.id = query;
-    console.log($(this.id));
-    this.assertEqual = function (call, value, info) {
-        msg = '<div class="alert alert-danger" role="alert"><strong>FAILED:</strong> ' + info + '<br>the Result is not what you expected<br> [ ' + call + ' != ' + value + ' ]</div>';
-        if (call == value) {
-            msg = '<div class="alert alert-warning" role="alert"><span class="glyphicon glyphicon-warning-sign"></span> ' + info + '<br>the Result may be not exacly what you expected<br> [ ' + call + ' == ' + value + ' ]</div>';
-        }
-        if (call === value) {
-            msg = '<div class="alert alert-success" role="alert"><strong>OK!</strong> ' + info + '</div>';
-        }
-        return msg;
-    }
-
-    this.assertTest = function (call, value, info) {
-        information = $(this.assertEqual(call, value, info));
-        $(this.id).append(information);
-    }
-
-    this.assertInfo = function (info) {
-        var information = $("<div class='alert alert-info' role='alert'><strong>INFO:</strong> " + info + "</div>");
-        $(this.id).append(information);
-    }
-
-}
 $().ready(function () {
     test41 = new RuebeTest("#aufgabe41results");
     test41.assertInfo("HALLO");
@@ -123,12 +125,77 @@ $().ready(function () {
 </div>
 </div>
 <div class="row">
-script
-<pre id="aufgabe41code" class="sh_javascript">X</pre>
-test
-<div id="aufgabe41results">X</div>
+<pre id="aufgabe41code" class="sh_javascript col-md-8">X</pre>
+<div id="aufgabe41results" class=" col-md-4">X</div>
 </div>
 </div>
+<script>
+// AUfgabe 4.2?
+    var sequenz = [1,2,3,4,1,5,5];
+    var getMiddleSumIndex = function(S){
+        var left=0 , right=S.length-1 , suml=0,sumr=0;
+        while(left < right){
+            if(suml < sumr){
+                suml+=S[left];
+                left+=1;
+            } else {
+                sumr+=S[right];
+                right-=1;
+            }
+            console.log("left: "+left+" S="+suml);
+            console.log("right: "+right+" S="+sumr);
+        }
+        if (suml==sumr){
+            return left;
+        }
+        return -1;    
+    }
+console.log(getMiddleSumIndex(sequenz));
+</script>
+
+<script>
+
+var BinBaumNode = function(leftChild,rightChild){
+    this.leftChild=leftChild;
+    this.rightChild=rightChild;
+    
+    this.countLeft = function(values)
+    {
+        return this.propergate(values+1,1);
+    }
+    
+    this.countRight = function(values)
+    {
+        return this.propergate(1,values+1);
+    }
+    
+    this.propergate = function(left,right){
+        var leftLength, rightLength;
+        if(this.leftChild)
+        {
+            leftLength = this.leftChild.countLeft(left);
+        }
+        else
+        {
+            leftLength = left;
+        }
+        
+        if(this.rightChild)
+        {
+            rightLength = this.rightChild.countRight(right);
+        }
+        else
+        {
+            rightLength = right;
+        }
+        return Math.max(rightLength,leftLength);
+    }
+
+}
+
+
+</script>
+
 
 <script>
 $().ready(function(){sh_highlightDocument();});
