@@ -98,6 +98,47 @@ countSort = function (Haufen, Summe) {
 
 }
 
+var RuebeTest = function (query) {
+    this.id = query;
+    console.log($(this.id));
+    this.assertEqual = function (call, value, info) {
+        msg = '<div class="alert alert-danger" role="alert"><strong>FAILED:</strong> ' + info + '<br>the Result is not what you expected<br> [ ' + call + ' != ' + value + ' ]</div>';
+        if (call == value) {
+            msg = '<div class="alert alert-warning" role="alert"><span class="glyphicon glyphicon-warning-sign"></span> ' + info + '<br>the Result may be not exacly what you expected<br> [ ' + call + ' == ' + value + ' ]</div>';
+        }
+        if (call === value) {
+            msg = '<div class="alert alert-success" role="alert"><strong>OK!</strong> ' + info + '</div>';
+        }
+        return msg;
+    }
+    
+    this.assertTrueInt = function (call, info) {
+        msg = '<div class="alert alert-danger" role="alert"><strong>FAILED:</strong> ' + info + '<br></div>';
+        if (call == true) {
+            msg = '<div class="alert alert-warning" role="alert"><span class="glyphicon glyphicon-warning-sign"></span> ' + info + '<br>the Result may be not exacly what you expected<br> [ ' + call + ' == ' + true + ' ]</div>';
+        }
+        if (call === true) {
+            msg = '<div class="alert alert-success" role="alert"><strong>OK!</strong> ' + info + '</div>';
+        }
+        return msg;
+    }
+
+    this.assertTest = function (call, value, info) {
+        information = $(this.assertEqual(call, value, info));
+        $(this.id).append(information);
+    }
+    this.assertTrue = function (call, info) {
+        information = $(this.assertTrueInt(call, info));
+        $(this.id).append(information);
+    }
+
+    this.assertInfo = function (info) {
+        var information = $("<div class='alert alert-info' role='alert'><strong>INFO:</strong> " + info + "</div>");
+        $(this.id).append(information);
+    }
+
+}
+
 $().ready(function () {
     test41 = new RuebeTest("#aufgabe41results");
     test41.assertInfo("HALLO");
@@ -106,6 +147,77 @@ $().ready(function () {
 
     $("#aufgabe41code").text($("#aufgabe41script").text());
 });
+  
+</script>
+  
+<script id="aufgabe42script">
+var ghostMidPoint = 0;
+var midPoint = function(sequenz){
+    ghostCount = 0;
+    if(sequenz.length < 3){
+        return -1;  
+    }
+    // Beginn zusätzlicher Speicher
+    var sumBegin = 0;
+    var sumEnd = 0;
+    // Ende ZusätzlicherSpeicher
+    // ZusätzlicherSpeicher == (2 * int) == O(C) < O(n)
+    
+    var j = 0;
+    var k = sequenz.length - 1;
+    while ((k - j) > 2){
+        if(sumBegin <= sumEnd){
+            ghostCount++;
+            sumBegin += sequenz[j];
+            j++;
+        } else {
+            ghostCount++;
+            sumEnd += sequenz[k]; 
+            k--; 
+        }
+    }
+    if(sumBegin + sequenz[j] + sequenz[j+1] == sumEnd){
+        return k;
+    }else if(sumBegin == sumEnd + sequenz[k] + sequenz[k-1]){
+        return j;
+    }else if(sumBegin + sequenz[j] == sumEnd + sequenz[k]){
+        return j+1;
+    }else{
+        return -1;  
+    }
+};
+  
+$().ready(function () {
+    test42 = new RuebeTest("#aufgabe42results");
+    test42.assertInfo("Aufgabe 4.2 Tests");
+    var testvar = [1,1,2,3,2,1,1];
+    test42.assertTest(midPoint(testvar), 3, "input: [" + testvar + "]");
+    test42.assertTrue(ghostMidPoint <= testvar.length, "Runtime: " + ghostCount + " for [" + testvar + "] Max is: " + testvar.length);
+    testvar = [3,2,3,2,1,1,1];
+    test42.assertTest(midPoint(testvar), 2, "input: [" + testvar + "]");
+    test42.assertTrue(ghostMidPoint <= testvar.length, "Runtime: " + ghostCount + " for [" + testvar + "] Max is: " + testvar.length);
+    testvar = [1,1,1,2,2,3,2];
+    test42.assertTest(midPoint(testvar), 4, "input: [" + testvar + "]");
+    test42.assertTrue(ghostMidPoint <= testvar.length, "Runtime: " + ghostCount + " for [" + testvar + "] Max is: " + testvar.length);
+    testvar = [1,1,1];
+    test42.assertTest(midPoint(testvar), 1, "input: [" + testvar + "]");
+    test42.assertTrue(ghostMidPoint <= testvar.length, "Runtime: " + ghostCount + " for [" + testvar + "] Max is: " + testvar.length);
+    testvar = [1,1];
+    test42.assertTest(midPoint(testvar), -1, "input: [" + testvar + "]");
+    test42.assertTrue(ghostMidPoint <= testvar.length, "Runtime: " + ghostCount + " for [" + testvar + "] Max is: " + testvar.length);
+    testvar = [2,1,1,1];
+    test42.assertTest(midPoint(testvar), 1, "input: [" + testvar + "]");
+    test42.assertTrue(ghostMidPoint <= testvar.length, "Runtime: " + ghostCount + " for [" + testvar + "] Max is: " + testvar.length);
+    testvar = [1,1,1,2];
+    test42.assertTest(midPoint(testvar), 2, "input: [" + testvar + "]");
+    test42.assertTrue(ghostMidPoint <= testvar.length, "Runtime: " + ghostCount + " for [" + testvar + "] Max is: " + testvar.length);
+    testvar = [3,1,1,1,2];
+    test42.assertTest(midPoint(testvar), -1, "input: [" + testvar + "]");
+    test42.assertTrue(ghostMidPoint <= testvar.length, "Runtime: " + ghostCount + " for [" + testvar + "] Max is: " + testvar.length);
+
+    $("#aufgabe42code").text($("#aufgabe42script").text());
+});
+
 </script>
 </head>
 <body>
@@ -125,9 +237,25 @@ $().ready(function () {
 </div>
 </div>
 <div class="row">
-<pre id="aufgabe41code" class="sh_javascript col-md-8">X</pre>
-<div id="aufgabe41results" class=" col-md-4">X</div>
+
+
+  script
+  <pre id="aufgabe41code" class="sh_javascript">X</pre>
+  test
+  <div id="aufgabe41results">
+    X
+  </div>
 </div>
+  
+<div class="row">
+  script
+  <pre id="aufgabe42code" class="sh_javascript">X</pre>
+  test
+  <div id="aufgabe42results">
+    
+  </div>
+</div>
+  
 </div>
 <script>
 // AUfgabe 4.2?
@@ -193,6 +321,10 @@ var BinBaumNode = function(leftChild,rightChild){
 
 }
 
+var n2l=BinBaumNode();
+var n2r=BinBaumNode();
+var root=BinBaumNode(n2l,n2r);
+console.log(root.propergate(0,0));
 
 </script>
 
