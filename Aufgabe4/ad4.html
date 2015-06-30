@@ -139,14 +139,7 @@ var RuebeTest = function (query) {
 
 }
 
-$().ready(function () {
-    test41 = new RuebeTest("#aufgabe41results");
-    test41.assertInfo("HALLO");
-    test41.assertTest(countSort(liste, 8), 4, "aus der Liste der Zahlen 0-8 lassen sich 4 Paarungen finden um die Summe 8 zu bilden!");
-    test41.assertTest(countSort([2, 4, 4, 6], 8), 2, "aus der Liste der Zahlen [2,4,4,6] lassen sich 2 Paarungen finden um die Summe 8 zu bilden!");
 
-    $("#aufgabe41code").text($("#aufgabe41script").text());
-});
   
 </script>
   
@@ -163,60 +156,26 @@ var midPoint = function(sequenz){
     // Ende ZusätzlicherSpeicher
     // ZusätzlicherSpeicher == (2 * int) == O(C) < O(n)
     
-    var j = 0;
-    var k = sequenz.length - 1;
-    while ((k - j) > 2){
-        if(sumBegin <= sumEnd){
-            ghostCount++;
-            sumBegin += sequenz[j];
-            j++;
-        } else {
-            ghostCount++;
-            sumEnd += sequenz[k]; 
-            k--; 
-        }
-    }
-    if(sumBegin + sequenz[j] + sequenz[j+1] == sumEnd){
-        return k;
-    }else if(sumBegin == sumEnd + sequenz[k] + sequenz[k-1]){
-        return j;
-    }else if(sumBegin + sequenz[j] == sumEnd + sequenz[k]){
-        return j+1;
-    }else{
-        return -1;  
-    }
-};
+    var j = 1;
+    var k = sequenz.length;
   
-$().ready(function () {
-    test42 = new RuebeTest("#aufgabe42results");
-    test42.assertInfo("Aufgabe 4.2 Tests");
-    var testvar = [1,1,2,3,2,1,1];
-    test42.assertTest(midPoint(testvar), 3, "input: [" + testvar + "]");
-    test42.assertTrue(ghostMidPoint <= testvar.length, "Runtime: " + ghostCount + " for [" + testvar + "] Max is: " + testvar.length);
-    testvar = [3,2,3,2,1,1,1];
-    test42.assertTest(midPoint(testvar), 2, "input: [" + testvar + "]");
-    test42.assertTrue(ghostMidPoint <= testvar.length, "Runtime: " + ghostCount + " for [" + testvar + "] Max is: " + testvar.length);
-    testvar = [1,1,1,2,2,3,2];
-    test42.assertTest(midPoint(testvar), 4, "input: [" + testvar + "]");
-    test42.assertTrue(ghostMidPoint <= testvar.length, "Runtime: " + ghostCount + " for [" + testvar + "] Max is: " + testvar.length);
-    testvar = [1,1,1];
-    test42.assertTest(midPoint(testvar), 1, "input: [" + testvar + "]");
-    test42.assertTrue(ghostMidPoint <= testvar.length, "Runtime: " + ghostCount + " for [" + testvar + "] Max is: " + testvar.length);
-    testvar = [1,1];
-    test42.assertTest(midPoint(testvar), -1, "input: [" + testvar + "]");
-    test42.assertTrue(ghostMidPoint <= testvar.length, "Runtime: " + ghostCount + " for [" + testvar + "] Max is: " + testvar.length);
-    testvar = [2,1,1,1];
-    test42.assertTest(midPoint(testvar), 1, "input: [" + testvar + "]");
-    test42.assertTrue(ghostMidPoint <= testvar.length, "Runtime: " + ghostCount + " for [" + testvar + "] Max is: " + testvar.length);
-    testvar = [1,1,1,2];
-    test42.assertTest(midPoint(testvar), 2, "input: [" + testvar + "]");
-    test42.assertTrue(ghostMidPoint <= testvar.length, "Runtime: " + ghostCount + " for [" + testvar + "] Max is: " + testvar.length);
-    testvar = [3,1,1,1,2];
-    test42.assertTest(midPoint(testvar), -1, "input: [" + testvar + "]");
-    test42.assertTrue(ghostMidPoint <= testvar.length, "Runtime: " + ghostCount + " for [" + testvar + "] Max is: " + testvar.length);
-
-    $("#aufgabe42code").text($("#aufgabe42script").text());
-});
+    while (j < k){
+          ghostCount++;
+          sumEnd += sequenz[j]; 
+          j++; 
+      }
+    j = 0;
+    while (j < (k -2)){
+          ghostCount++;
+          sumBegin += sequenz[j];
+          sumEnd -= sequenz[j+1]
+          if (sumBegin == sumEnd){
+            return j+1;
+          }
+          j++;
+    }
+    return -1;
+};
 
 </script>
 </head>
@@ -256,6 +215,26 @@ $().ready(function () {
   </div>
 </div>
   
+<div class="row">
+  script
+  <pre id="aufgabe43code" class="sh_javascript">X</pre>
+  test
+  <div id="aufgabe43results">
+    
+  </div>
+</div>
+  
+<div class="row">
+  script
+  <pre id="aufgabe44code" class="sh_javascript">X</pre>
+  test
+  <div id="aufgabe44results">
+    
+  </div>
+  <div id="aufgabe44experiments" style="height: 250px;"></div>
+
+</div>
+  
 </div>
 <script>
 /* AUfgabe 4.2?
@@ -285,7 +264,7 @@ $().ready(function () {
 console.log(getMiddleSumIndex(sequenz));*/
 </script>
 
-<script>
+<script id="aufgabe43script">
 
 var BinBaumNode = function(leftChild,rightChild){
     this.leftChild=leftChild;
@@ -299,6 +278,10 @@ var BinBaumNode = function(leftChild,rightChild){
     this.countRight = function(values)
     {
         return this.propergate(1,values+1);
+    }
+    
+    this.getLongestLine = function(){
+        return this.propergate(1,1);
     }
     
     this.propergate = function(left,right){
@@ -325,16 +308,686 @@ var BinBaumNode = function(leftChild,rightChild){
 
 }
 
-var n2l=new BinBaumNode();
-var n3r=new BinBaumNode();
-var n2r=new BinBaumNode(undefined,n3r);
-var root=new BinBaumNode(n2l,n2r);
-console.log(root.propergate(1,1));
 
 </script>
 
 
+<script id="aufgabe44script">
+  var ad_4_4_data = [];
+
+	// Code
+		var counter = 0;
+
+	
+	function Graph() {
+	
+		this.edgesCount = 0;
+		this.vertexCount = 0;
+		
+		this.edges = [];
+		this.vertieces = [];
+		
+		
+		this.addEdge = function(edge) {
+			this.edges[this.edgesCount] = edge;
+			this.edgesCount++;
+		}
+		
+		this.addVertex = function(vertex) {
+			this.vertieces[this.vertexCount] = vertex;
+			this.vertexCount++;
+		}
+	
+		this.getEdgesOf = function(vertex){
+			var resultSet = [];
+			for(var i=0; i < this.edgesCount;i++){
+				var edge = this.edges[i];
+				//console.log(edge.toString());
+				if(edge.getSource().equals(vertex))
+				{
+					resultSet.push(this.edges[i]);
+				}
+			}
+			return resultSet;
+		}
+		
+		
+		
+	}
+
+	function MyVertex(value){	
+		this.value = value;
+		this.color = "weis";
+		this.vorgaenger = null;
+		
+		
+		this.setAttribute = function(value){
+			this.value = value;
+		}
+		
+		this.setColor = function(color) {
+			this.color = color;
+		}
+		
+		this.toString = function(){
+			return ""+this.value;
+		}
+		
+		this.equals = function(otherVertex){
+			if(this.value == otherVertex.value){
+				return true;
+			}
+			return false;
+		}
+	} 
+
+	function MyEdge(source,target,value) {			
+		this.source = source;
+		this.target = target;
+		this.value = value;
+		this.visited = false;
+		this.depth = 0;
+		
+		this.visit = function(){
+			this.visited = true;
+		}
+		
+		this.setTarget = function(vertex) {
+			this.target = vertex;
+		}
+		
+		this.setSource = function(vertex) {
+			this.source = vertex;
+		}
+	
+		this.setWeigth = function(value) {
+			this.value = value;
+		}	
+		
+		this.getSource = function(){
+			return this.source;
+		}
+
+		this.getTarget = function(){
+			return this.target;
+		}
+
+		this.toString = function(){
+			return "("+ source + " -> " + target + " : " +this.value + ")";
+		}
+	}
+		
+
+	// ********************************** HILFSFUNKTIONEN *********************************************
+	
+	// Sortiert die Werte in einem Array aufsteigend -> [1,2,3,4,5,6,7,8,9,10]
+
+  var counter =0;
+
+	// Liefert einen random generierten Integer, der zwischen min (inklusiv) und max (exklusiv) liegt
+	function getRandomInt(min, max) {
+		return Math.floor(Math.random() * (max - min)) + min;
+	}
+
+// Liefert den längsten Pfad mit aufsteigendem Gewicht
+	function longestPathWithStrongMonotonIncreasingWeight(graph) {
+		counter =0;
+		var longestPath = 0;	// Der längste gefundene Weg
+		var lastSeenEdge = null;// Die zuletzt betrachtete Kante (Wir dürfen nur streng monoton steigend suchen)
+
+		// 1.) alle Kanten von klein nach groß sortieren
+		var edgesSorted = new Array().concat(graph.edges);
+
+		// Den Startknoten suchen. Dieser hängt an der kleinsten Kante.
+
+		//var startVertex = lastSeenEdge.getSource();// F
+		//var endVertex = lastSeenEdge.getTarget();
+
+		//Länge zum Vergleichen erstellen
+		var v1 = 0;
+
+		//Solange unser sortiertes Edgearray nicht leer ist, soll er immer mit der kürzesten Edge beginnend nach einen kürzesten Pfad suchen.
+		while (edgesSorted.length>0) {
+			counter++;
+		lastSeenEdge = edgesSorted[0];
+			//aufrufen der suche nach den kürzesten Pfad
+		var v2 = getDepth(graph, lastSeenEdge, 1, edgesSorted);
+			//vergleich ob der gefundene längeste Pfad größer ist, als der bisherige längste Pfad.
+		if (v1 < v2[0]) v1 = v2[0];
+		}
+		return v1;
+		
+	}
+	
+	function getDepth(graph, edge, depth, edgeList){
+		counter++;
+
+		//Target Knoten der Edge erhalten, um weitere Edges zu finden.
+		var endVertex = edge.getTarget();
+		//Initialisirung einer Variable zum bestimen des Abstandes zum Pfadende.
+		var depthTillBeginning = 0;
+
+		//Entfernen der Edge aus der EdgeListe
+		var elemIndex = edgeList.indexOf(edge);
+		if (elemIndex>-1) {
+			edgeList.splice(elemIndex, 1);
+		}
+
+		//Sofern die Edge schonmal betrachtet worden ist, gibt sie ihren längsten Weg zu einen Pfadende zurück ohne die Schleife weiter zu durchlaufen.
+		if (edge.depth > 0){
+			return [depth + edge.depth-1,edge.depth+1];
+		}
+
+		//Erhalten aller Nachfolger des Targetknotens im Graphen.
+		var edges = graph.getEdgesOf(endVertex);
+
+		//Sichern der Variable depth, da diese im Schleifenaufruf geändert werden könnte!
+		var thisDepth = depth;
+
+		//Schleife über alle Nachfolger
+		for(var i = 0 ; i < edges.length; i++){
+			counter++;
+				//Prüfung streng Monoton steigend!
+				if (edge.value < edges[i].value) {
+
+
+					//Ein gefundener Pfad wird weitergegangen
+					var currDepth = getDepth(graph, edges[i], thisDepth + 1, edgeList);
+
+					//Überprüfung, ob der gefundene Pfad tiefer ist, als der aktuelle.
+					if (currDepth[0] > depth) {
+
+						//Setzen der maximalen Tiefe des gefundenen Pfades
+						depth = currDepth[0];
+
+						//Setzen der entfernung zum Pfadende
+						depthTillBeginning = currDepth[1]
+					}
+				}
+		}
+
+		//Sofern kein weiterer Pfad gefunden wordne ist, muss es sich um den akutellen tiefsten Pfad handeln, der aus der Schleife hervorgeht.
+		//Sollte es sich um eine Endedge handeln (edge, an der es nicht weitergeht), wird die Tiefe bis zum Pfadende auf 1 gesetzt.
+		if (depthTillBeginning == 0) depthTillBeginning = 1;
+		//In der Edge wird dieser Wert gsichert.
+		edge.depth = depthTillBeginning;
+		//rückgabe der Tiefe und der entfernung zum Pfadende
+		return [depth,depthTillBeginning+1];
+	}
+	
+	 // ****************Tests***********************	
+	 //graph1 erstellen
+	   // Testgraph 1
+  // ---------------------------------------------------
+  var graphJan = new Graph();
+
+  var v0 = new MyVertex("0");
+  var v1 = new MyVertex("1");
+  var v2 = new MyVertex("2");
+  var v3 = new MyVertex("3");
+  var v4 = new MyVertex("4");
+  var v5 = new MyVertex("5");
+  var v6 = new MyVertex("6");
+  var v7 = new MyVertex("7");
+  var v8 = new MyVertex("8");
+
+  var e0 = new MyEdge(v0, v1, 0);
+  var e1 = new MyEdge(v1, v2, 1);
+  var e2 = new MyEdge(v2, v3, 2);
+  var e3 = new MyEdge(v3, v4, 3);
+  var e4 = new MyEdge(v6, v4, 2);
+  var e5 = new MyEdge(v2, v6, 4);
+  var e6 = new MyEdge(v7, v6, 1);
+  var e7 = new MyEdge(v6, v5, 6);
+  var e8 = new MyEdge(v5, v4, 13);
+  var e9 = new MyEdge(v8, v5, 11);
+  var e10 = new MyEdge(v0, v8, 10);
+  var e11 = new MyEdge(v0, v7, 0);
+  var e12 = new MyEdge(v8, v7, 2);
+
+  // Add Vertices
+  graphJan.addVertex(v0);
+  graphJan.addVertex(v1);
+  graphJan.addVertex(v2);
+  graphJan.addVertex(v3);
+  graphJan.addVertex(v4);
+  graphJan.addVertex(v5);
+  graphJan.addVertex(v6);
+  graphJan.addVertex(v7);
+  graphJan.addVertex(v8);
+
+  // Add Edges
+  graphJan.addEdge(e0);
+  graphJan.addEdge(e1);
+  graphJan.addEdge(e2);
+  graphJan.addEdge(e3);
+  graphJan.addEdge(e4);
+  graphJan.addEdge(e5);
+  graphJan.addEdge(e6);
+  graphJan.addEdge(e7);
+  graphJan.addEdge(e8);
+  graphJan.addEdge(e9);
+  graphJan.addEdge(e10);
+  graphJan.addEdge(e11);
+  graphJan.addEdge(e12);
+
+  // ------------------------------------------------------
+
+
+  // Test-Graph 2
+
+  // ------------------------------------------------------
+  var graph2Jan = new Graph();
+
+  var vert1 = new MyVertex("A");
+  var vert2 = new MyVertex("B");
+  var vert3 = new MyVertex("C");
+  var vert4 = new MyVertex("D");
+
+  var e1 = new MyEdge(vert1, vert2, 1);
+  var e2 = new MyEdge(vert2, vert3, 1);
+  var e3 = new MyEdge(vert3, vert4, 1);
+  var e4 = new MyEdge(vert4, vert1, 1);
+
+  graph2Jan.addVertex(vert1);
+  graph2Jan.addVertex(vert2);
+  graph2Jan.addVertex(vert3);
+  graph2Jan.addVertex(vert4);
+
+  graph2Jan.addEdge(e1);
+  graph2Jan.addEdge(e2);
+  graph2Jan.addEdge(e3);
+  graph2Jan.addEdge(e4);
+
+  // --------------------------------------------------------
+
+  // Testgraph 3
+  // -------------------------------------------------------
+
+  var graph3Jan = new Graph();
+
+  var vert1 = new MyVertex("A");
+  var vert2 = new MyVertex("B");
+  var vert3 = new MyVertex("C");
+
+  var e1 = new MyEdge(vert1, vert2, 0);
+  var e2 = new MyEdge(vert2, vert2, 1);
+  var e3 = new MyEdge(vert2, vert3, 2);
+
+  graph3Jan.addVertex(vert1);
+  graph3Jan.addVertex(vert2);
+  graph3Jan.addVertex(vert3);
+
+  graph3Jan.addEdge(e1);
+  graph3Jan.addEdge(e2);
+  graph3Jan.addEdge(e3);
+
+  // --------------------------------------------------------
+
+  // Testgraph 4
+  // ---------------------------------------------------------
+
+  var graph4Jan = new Graph();
+
+  var vert1 = new MyVertex("A");
+  var vert2 = new MyVertex("B");
+  var vert3 = new MyVertex("C");
+  var vert4 = new MyVertex("D");
+  var vert5 = new MyVertex("E");
+  var vert6 = new MyVertex("F");
+
+  graph4Jan.addVertex(vert1);
+  graph4Jan.addVertex(vert2);
+  graph4Jan.addVertex(vert3);
+  graph4Jan.addVertex(vert4);
+  graph4Jan.addVertex(vert5);
+  graph4Jan.addVertex(vert6);
+
+  var edge1 = new MyEdge(vert1, vert2, 1);
+  var edge2 = new MyEdge(vert2, vert3, 2);
+  var edge3 = new MyEdge(vert3, vert4, 0);
+  var edge4 = new MyEdge(vert5, vert6, 5);
+
+  graph4Jan.addEdge(edge1);
+  graph4Jan.addEdge(edge2);
+  graph4Jan.addEdge(edge3);
+  graph4Jan.addEdge(edge4);
+
+
+  // --------------------------------------------------------
+ 
+	 var graf_henning = new Graph();
+		
+		//Knoten erstellen
+		var vertex0 = new MyVertex('V0');
+		var vertex1 = new MyVertex('V1');
+		var vertex2 = new MyVertex('V2');
+		var vertex3 = new MyVertex('V3');
+		var vertex4 = new MyVertex('V4');
+		var vertex5 = new MyVertex('V5');
+		var vertex6 = new MyVertex('V6');
+		var vertex7 = new MyVertex('V7');
+		var vertex8 = new MyVertex('V8');
+		var vertex9 = new MyVertex('V9');
+		var vertex10 = new MyVertex('V10');
+		var vertex11 = new MyVertex('V11');
+		var vertex12 = new MyVertex('V12');
+		var vertex13 = new MyVertex('V13');
+		var vertex14 = new MyVertex('V14');
+		
+		graf_henning.addVertex(vertex0);
+		graf_henning.addVertex(vertex1);
+		graf_henning.addVertex(vertex2);
+		graf_henning.addVertex(vertex3);
+		graf_henning.addVertex(vertex4);
+		graf_henning.addVertex(vertex5);
+		graf_henning.addVertex(vertex6);
+		graf_henning.addVertex(vertex7);
+		graf_henning.addVertex(vertex8);
+		graf_henning.addVertex(vertex9);
+		graf_henning.addVertex(vertex10);
+		graf_henning.addVertex(vertex11);
+		graf_henning.addVertex(vertex12);
+		graf_henning.addVertex(vertex13);
+		graf_henning.addVertex(vertex14);
+		
+		graf_henning.addEdge(new MyEdge(vertex1,vertex4,1));
+		graf_henning.addEdge(new MyEdge(vertex9,vertex8,30));
+		graf_henning.addEdge(new MyEdge(vertex7,vertex5,60));
+		graf_henning.addEdge(new MyEdge(vertex4,vertex11,100));
+		graf_henning.addEdge(new MyEdge(vertex11,vertex9,2));
+		graf_henning.addEdge(new MyEdge(vertex1,vertex3,2));
+		graf_henning.addEdge(new MyEdge(vertex2,vertex0,2));
+		graf_henning.addEdge(new MyEdge(vertex13,vertex12,5));
+		graf_henning.addEdge(new MyEdge(vertex13,vertex8,1));
+		graf_henning.addEdge(new MyEdge(vertex3,vertex1,5));
+		graf_henning.addEdge(new MyEdge(vertex4,vertex7,5));
+		graf_henning.addEdge(new MyEdge(vertex5,vertex4,10));
+		graf_henning.addEdge(new MyEdge(vertex11,vertex4,10));
+		graf_henning.addEdge(new MyEdge(vertex12,vertex8,7));
+		graf_henning.addEdge(new MyEdge(vertex2,vertex1,8));
+		graf_henning.addEdge(new MyEdge(vertex10,vertex2,8));
+		graf_henning.addEdge(new MyEdge(vertex6,vertex5,9));
+		graf_henning.addEdge(new MyEdge(vertex12,vertex6,10));
+		graf_henning.addEdge(new MyEdge(vertex6,vertex10,11));
+		graf_henning.addEdge(new MyEdge(vertex3,vertex5,13));
+		graf_henning.addEdge(new MyEdge(vertex3,vertex6,16));
+		graf_henning.addEdge(new MyEdge(vertex13,vertex11,17));
+		graf_henning.addEdge(new MyEdge(vertex2,vertex3,19));
+		graf_henning.addEdge(new MyEdge(vertex10,vertex6,19));
+		graf_henning.addEdge(new MyEdge(vertex9,vertex4,20));
+		graf_henning.addEdge(new MyEdge(vertex1,vertex0,3));
+		graf_henning.addEdge(new MyEdge(vertex7,vertex12,3));
+		graf_henning.addEdge(new MyEdge(vertex11,vertex0,4));
+		graf_henning.addEdge(new MyEdge(vertex9,vertex13,4));
+		graf_henning.addEdge(new MyEdge(vertex3,vertex10,20));
+		graf_henning.addEdge(new MyEdge(vertex14,vertex14,200));
+
+		
+		
+	 var  graph = new Graph();
+	 var ver1 = new MyVertex("A");
+	 var ver2 = new MyVertex("B");
+	 var ver3 = new MyVertex("C");
+	 var ver4 = new MyVertex("D");
+	 
+	 graph.addVertex(ver1);
+	 graph.addVertex(ver2);
+	 graph.addVertex(ver3);
+	 graph.addVertex(ver4);
+	 
+	 graph.addEdge(new MyEdge(ver1,ver2,1));
+	 graph.addEdge(new MyEdge(ver2,ver3,1));
+	 graph.addEdge(new MyEdge(ver3,ver4,1));
+	 graph.addEdge(new MyEdge(ver4,ver1,1));
+	 
+
+	 
+	 
+	
+	
+	 // ********* Random Graphen Erstellen ****************
+	 
+	 // 20 Knoten, mit 30 Kanten
+	 var anzahlKnoten = 20;
+	 var anzahlKanten = 30;
+	 
+	 var graph = new Graph(); // Der Graph
+	 
+	 for(var i=0;i<anzahlKnoten;i++){ // Die Knoten
+		var vertex1 = new MyVertex(i+1);
+		graph.addVertex(vertex1);
+	 }
+
+  	var graph2 = new Graph();
+
+  {
+	  var vert1 = new MyVertex("A");
+	  var vert2 = new MyVertex("B");
+	  var vert3 = new MyVertex("C");
+	  var vert4 = new MyVertex("D");
+	  var vert5 = new MyVertex("E");
+	  var vert6 = new MyVertex("F");
+	  var vert7 = new MyVertex("Q");
+	  graph2.addVertex(vert1);
+	  graph2.addVertex(vert2);
+	  graph2.addVertex(vert3);
+	  graph2.addVertex(vert4);
+	  graph2.addVertex(vert5);
+	  graph2.addVertex(vert6);
+	  graph2.addVertex(vert7);
+
+	  graph2.addEdge(new MyEdge(vert1,vert2,10));
+	  graph2.addEdge(new MyEdge(vert3,vert1,9));
+	  graph2.addEdge(new MyEdge(vert6,vert1,9));
+	  graph2.addEdge(new MyEdge(vert5,vert6,8));
+	  graph2.addEdge(new MyEdge(vert4,vert5,7));
+	  graph2.addEdge(new MyEdge(vert4,vert7,5));
+	  graph2.addEdge(new MyEdge(vert3,vert4,4));
+	  graph2.addEdge(new MyEdge(vert1,vert3,5));
+	  graph2.addEdge(new MyEdge(vert4,vert6,6));
+	  graph2.addEdge(new MyEdge(vert6,vert3,3));
+	  graph2.addEdge(new MyEdge(vert5,vert1,4));
+
+  }
+
+	 
+	 for(var i = 0; i < anzahlKanten;i++){ // Die Kanten
+		var randomVertex1 = getRandomInt(0,graph.vertexCount);
+		var randomVertex2 = getRandomInt(0,graph.vertexCount);
+		graph.addEdge(new MyEdge(graph.vertieces[randomVertex1],graph.vertieces[randomVertex2],i+1));		
+	 }
+	 
+	 
+	 console.log("Anzahl Knoten im Graph: " + graph.vertexCount);
+	 console.log("Anzahl Kanten im Graph: " + graph.edgesCount);
+	 console.log("Alle Knoten: " + graph.vertieces);
+	 
+	 console.log("Kanten: " + graph.edges);
+
+	 console.log("Ein Knoten: " + graph.vertieces[0]);
+	 console.log("Eine Kante: " + graph.edges[0]);
+	 graph.getEdgesOf(graph.vertieces[0]);
+	 console.log("Iwas " + longestPathWithStrongMonotonIncreasingWeight(graph2)+ " Countaaaa: " + counter);
+	 console.log("Iwas " + longestPathWithStrongMonotonIncreasingWeight(graph)+ " Countaaaa: " + counter);
+	 //console.log("Kanten von Vertex(1): " + graph.getEdgesOf(graph.vertieces[0]));	 
+
+	 
+	 
+	//test44.assertTest(9 === graph.dSearch(), "9 == graph.dSearch()"); 
+	//test44.assertTest(null != graph.dSearch(), "null != graph.dSearch()");  
+	  
+	 //******************Experimente************************
+
+  {
+	var graph3 = new Graph();
+
+		var anzahl = 200;
+
+	  for ( i = 0 ; i < anzahl ; i++ ){
+		  var vertex1 = new MyVertex(i+1);
+		  graph3.addVertex(vertex1);
+	  }
+
+	  var randomVertex1 = getRandomInt(0, graph3.vertexCount);
+	  var randomVertex2 = getRandomInt(0, graph3.vertexCount);
+	  graph3.addEdge(new MyEdge(graph3.vertieces[randomVertex1], graph3.vertieces[randomVertex2], i + 1));
+
+	  for ( i = 0; i < anzahl*3 ; i++) {
+		  var randomVertex1 = getRandomInt(0, graph3.vertexCount);
+		  var randomVertex2 = getRandomInt(0, graph3.vertexCount);
+		  graph3.addEdge(new MyEdge(graph3.vertieces[randomVertex1], graph3.vertieces[randomVertex2], i + 1));
+		  longestPathWithStrongMonotonIncreasingWeight(graph3);
+		  ad_4_4_data.push({
+			  experiment : graph3.edges.length,
+			  value : counter
+		  });
+	  }
+  }
+</script>
+  <script>
+new Morris.Line({
+  // ID of the element in which to draw the chart.
+  element: 'aufgabe44experiments',
+  // do values relate to dates (time)?
+  parseTime: false,
+  // Chart data records -- each entry in this array corresponds to a point on
+  // the chart.
+  data: ad_4_4_data,
+  // The name of the data record attribute that contains x-values.
+  xkey: 'experiment',
+  // A list of names of data record attributes that contain y-values.
+  ykeys: ['value'],
+  // Labels for the ykeys -- will be displayed when you hover over the
+  // chart.
+  labels: ['Value']
+});
+</script>
+
 <script>
+
+$().ready(function () {
+    test41 = new RuebeTest("#aufgabe41results");
+    test41.assertInfo("HALLO");
+    test41.assertTest(countSort(liste, 8), 4, "aus der Liste der Zahlen 0-8 lassen sich 4 Paarungen finden um die Summe 8 zu bilden!");
+    test41.assertTest(countSort([2, 4, 4, 6], 8), 2, "aus der Liste der Zahlen [2,4,4,6] lassen sich 2 Paarungen finden um die Summe 8 zu bilden!");
+
+    test42 = new RuebeTest("#aufgabe42results");
+        
+    test42.assertInfo("Aufgabe 4.2 Tests");
+    var testvar = [1,1,2,3,2,1,1];
+    test42.assertTest(midPoint(testvar), 3, "input: [" + testvar + "]");
+    test42.assertTrue(ghostMidPoint <= testvar.length, "Runtime: " + ghostCount + " for [" + testvar + "] Max is: 2*" + testvar.length);
+    testvar = [3,2,3,2,1,1,1];
+    test42.assertTest(midPoint(testvar), 2, "input: [" + testvar + "]");
+    test42.assertTrue(ghostMidPoint <= testvar.length, "Runtime: " + ghostCount + " for [" + testvar + "] Max is: 2*" + testvar.length);
+    testvar = [1,1,1,2,2,3,2];
+    test42.assertTest(midPoint(testvar), 4, "input: [" + testvar + "]");
+    test42.assertTrue(ghostMidPoint <= testvar.length, "Runtime: " + ghostCount + " for [" + testvar + "] Max is: 2*" + testvar.length);
+    testvar = [1,1,1];
+    test42.assertTest(midPoint(testvar), 1, "input: [" + testvar + "]");
+    test42.assertTrue(ghostMidPoint <= testvar.length, "Runtime: " + ghostCount + " for [" + testvar + "] Max is: 2*" + testvar.length);
+    testvar = [1,1];
+    test42.assertTest(midPoint(testvar), -1, "input: [" + testvar + "]");
+    test42.assertTrue(ghostMidPoint <= testvar.length, "Runtime: " + ghostCount + " for [" + testvar + "] Max is: 2*" + testvar.length);
+    testvar = [2,1,1,1];
+    test42.assertTest(midPoint(testvar), 1, "input: [" + testvar + "]");
+    test42.assertTrue(ghostMidPoint <= testvar.length, "Runtime: " + ghostCount + " for [" + testvar + "] Max is: 2*" + testvar.length);
+    testvar = [1,1,1,2];
+    test42.assertTest(midPoint(testvar), 2, "input: [" + testvar + "]");
+    test42.assertTrue(ghostMidPoint <= testvar.length, "Runtime: " + ghostCount + " for [" + testvar + "] Max is: 2*" + testvar.length);
+    testvar = [3,1,1,1,2];
+    test42.assertTest(midPoint(testvar), -1, "input: [" + testvar + "]");
+    test42.assertTrue(ghostMidPoint <= testvar.length, "Runtime: " + ghostCount + " for [" + testvar + "] Max is: 2*" + testvar.length);
+    testvar = [1,1,3,0,0,0,0,0,1,1];
+    test42.assertTest(midPoint(testvar), 2, "input: [" + testvar + "]");
+    test42.assertTrue(ghostMidPoint <= testvar.length, "Runtime: " + ghostCount + " for [" + testvar + "] Max is: 2*" + testvar.length);
+    testvar = [4,-1,0,3];
+    test42.assertTest(midPoint(testvar), 2, "input: [" + testvar + "]");
+    test42.assertTrue(ghostMidPoint <= testvar.length, "Runtime: " + ghostCount + " for [" + testvar + "] Max is: 2*" + testvar.length);
+    testvar = [3,0,-1,4];
+    test42.assertTest(midPoint(testvar), 1, "input: [" + testvar + "]");
+    test42.assertTrue(ghostMidPoint <= testvar.length, "Runtime: " + ghostCount + " for [" + testvar + "] Max is: 2*" + testvar.length);
+
+    
+    test43 = new RuebeTest("#aufgabe43results");
+    var n2l=new BinBaumNode();
+    var n3r=new BinBaumNode();
+    var n2r=new BinBaumNode(undefined,n3r);
+    var root=new BinBaumNode(n2l,n2r);
+    console.log(root.propergate(1,1));
+    test43.assertInfo("Tests mit der Länge 2");
+    var child = new BinBaumNode();
+    var root = new BinBaumNode(child,undefined);
+    test43.assertTest(root.getLongestLine(),2,"Wurzel mit linkem Blatt hat 2 Elemente");
+    var child = new BinBaumNode();
+    var root = new BinBaumNode(undefined,child);
+    test43.assertTest(root.getLongestLine(),2,"Wurzel mit rechtem Blatt hat 2 Elemente");
+    var lchild = new BinBaumNode();
+    var rchild = new BinBaumNode();
+    var root = new BinBaumNode(lchild,rchild);
+    test43.assertTest(root.getLongestLine(),2,"Wurzel mit linkem Blatt und rechten Blatt hat 2 Elemente");
+    var leafchild = new BinBaumNode();
+    var child = new BinBaumNode(leafchild,undefined);
+    var root = new BinBaumNode(undefined,child);
+    test43.assertTest(root.getLongestLine(),2,"Wurzel mit linkem Blatt am rechten Ast hat 2 Elemente");
+    var leafchild = new BinBaumNode();
+    var child = new BinBaumNode(undefined,leafchild);
+    var root = new BinBaumNode(child,undefined);
+    test43.assertTest(root.getLongestLine(),2,"Wurzel mit linkem Blatt am rechten Ast hat 2 Elemente");
+    
+    test43.assertInfo("Tests mit der Länge 3");
+    var leafchild = new BinBaumNode();
+    var child = new BinBaumNode(undefined,leafchild);
+    var root = new BinBaumNode(undefined,child);
+    test43.assertTest(root.getLongestLine(),3,"linearer Baum rechts 3 Elemente");
+    var leafchild = new BinBaumNode();
+    var child = new BinBaumNode(leafchild);
+    var root = new BinBaumNode(child);
+    test43.assertTest(root.getLongestLine(),3,"linearer Baum links 3 Elemente");
+    var cchild = new BinBaumNode();
+    var bchild = new BinBaumNode(cchild);
+    var achild = new BinBaumNode(bchild);
+    var root = new BinBaumNode(undefined,achild);
+    test43.assertTest(root.getLongestLine(),3,"Wurzel mit linkem Pfad am rechten Ast hat 3 Elemente");
+    var cchild = new BinBaumNode();
+    var bchild = new BinBaumNode(undefined,cchild);
+    var achild = new BinBaumNode(undefined,bchild);
+    var root = new BinBaumNode(achild,undefined);
+    test43.assertTest(root.getLongestLine(),3,"Wurzel mit rechtem Pfad am linken Ast hat 3 Elemente");
+    
+    var dchild = new BinBaumNode();
+    var cchild = new BinBaumNode(undefined,dchild);
+    var bchild = new BinBaumNode(cchild);
+    var achild = new BinBaumNode(bchild);
+    var root = new BinBaumNode(undefined,achild);
+    test43.assertTest(root.getLongestLine(),3,"Wurzel mit linkem Pfad am rechten Ast hat 3 Elemente");
+    var cchild = new BinBaumNode(dchild);
+    var bchild = new BinBaumNode(undefined,cchild);
+    var achild = new BinBaumNode(undefined,bchild);
+    var root = new BinBaumNode(achild,undefined);
+    test43.assertTest(root.getLongestLine(),3,"Wurzel mit rechtem Pfad am linken Ast hat 3 Elemente");
+    
+    
+    
+    
+    test44 = new RuebeTest("#aufgabe44results");
+    
+	 test44.assertTest(longestPathWithStrongMonotonIncreasingWeight(graph),1, "1 == longestPathWithStrongMonotonIncreasingWeight(graph)") ;
+	 test44.assertTest(longestPathWithStrongMonotonIncreasingWeight(graf_henning),6, "6 == longestPathWithStrongMonotonIncreasingWeight(graf_henning)") ;
+	  test44.assertTest(longestPathWithStrongMonotonIncreasingWeight(graphJan),5,"longestPathWithStrongMonotonIncreasingWeight(graphJan)==5");
+	  test44.assertTest(longestPathWithStrongMonotonIncreasingWeight(graph2Jan),1,"longestPathWithStrongMonotonIncreasingWeight(graph2Jan)==1");
+	  test44.assertTest(longestPathWithStrongMonotonIncreasingWeight(graph2Jan),1,"ongestPathWithStrongMonotonIncreasingWeight(graph2Jan)==1");
+	  test44.assertTest(longestPathWithStrongMonotonIncreasingWeight(graph3Jan),3,"longestPathWithStrongMonotonIncreasingWeight(graph3Jan)==3");
+	  test44.assertTest(longestPathWithStrongMonotonIncreasingWeight(graph4Jan),2,"longestPathWithStrongMonotonIncreasingWeight(graph4Jan)==2");
+
+    
+    
+    $("#aufgabe41code").text($("#aufgabe41script").text());
+    $("#aufgabe42code").text($("#aufgabe42script").text());
+    $("#aufgabe43code").text($("#aufgabe43script").text());
+    $("#aufgabe44code").text($("#aufgabe44script").text());
+});
 $().ready(function(){sh_highlightDocument();});
 </script>
 </body>
