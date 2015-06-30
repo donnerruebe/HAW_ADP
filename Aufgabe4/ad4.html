@@ -258,10 +258,14 @@ $().ready(function () {
   
 </div>
 <script>
-// AUfgabe 4.2?
+/* AUfgabe 4.2?
     var sequenz = [1,2,3,4,1,5,5];
     var getMiddleSumIndex = function(S){
-        var left=0 , right=S.length-1 , suml=0,sumr=0;
+        var leftSumms=[],rightSums=[];
+        
+        for(var i=0;i<S.length;i++){
+            
+        }
         while(left < right){
             if(suml < sumr){
                 suml+=S[left];
@@ -278,7 +282,7 @@ $().ready(function () {
         }
         return -1;    
     }
-console.log(getMiddleSumIndex(sequenz));
+console.log(getMiddleSumIndex(sequenz));*/
 </script>
 
 <script>
@@ -299,7 +303,7 @@ var BinBaumNode = function(leftChild,rightChild){
     
     this.propergate = function(left,right){
         var leftLength, rightLength;
-        if(this.leftChild)
+        if(this.leftChild != undefined)
         {
             leftLength = this.leftChild.countLeft(left);
         }
@@ -308,7 +312,7 @@ var BinBaumNode = function(leftChild,rightChild){
             leftLength = left;
         }
         
-        if(this.rightChild)
+        if(this.rightChild != undefined)
         {
             rightLength = this.rightChild.countRight(right);
         }
@@ -321,10 +325,11 @@ var BinBaumNode = function(leftChild,rightChild){
 
 }
 
-var n2l=BinBaumNode();
-var n2r=BinBaumNode();
-var root=BinBaumNode(n2l,n2r);
-console.log(root.propergate(0,0));
+var n2l=new BinBaumNode();
+var n3r=new BinBaumNode();
+var n2r=new BinBaumNode(undefined,n3r);
+var root=new BinBaumNode(n2l,n2r);
+console.log(root.propergate(1,1));
 
 </script>
 
