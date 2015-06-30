@@ -125,7 +125,6 @@ Testergebnisse
 			var resultSet = [];
 			for(var i=0; i < this.edgesCount;i++){
 				var edge = this.edges[i];
-				//console.log(edge.toString());
 				if(edge.getSource().equals(vertex))
 				{
 					resultSet.push(this.edges[i]);
@@ -140,7 +139,6 @@ Testergebnisse
 
 	function MyVertex(value){	
 		this.value = value;
-		this.color = "weis";
 		this.vorgaenger = null;
 		
 		
@@ -168,12 +166,7 @@ Testergebnisse
 		this.source = source;
 		this.target = target;
 		this.value = value;
-		this.visited = false;
 		this.depth = 0;
-		
-		this.visit = function(){
-			this.visited = true;
-		}
 		
 		this.setTarget = function(vertex) {
 			this.target = vertex;
@@ -199,68 +192,23 @@ Testergebnisse
 			return "("+ source + " -> " + target + " : " +this.value + ")";
 		}
 	}
-		
-
-	// ********************************** HILFSFUNKTIONEN *********************************************
-	
-	// Sortiert die Werte in einem Array aufsteigend -> [1,2,3,4,5,6,7,8,9,10]
 
   var counter =0;
 
-  function mergeSort(arr) {
-		if (arr.length < 2) return arr;
-		
-		var mid = Math.floor(arr.length /2);
-	  	counter+=1;
-		var subLeft = mergeSort(arr.slice(0,mid));
-	  	counter+=1;
-		var subRight = mergeSort(arr.slice(mid));
-		
-		return merge(subLeft, subRight);
-	}
-
-	// Hilfsfunktion für MergeSort
-	function merge(a,b) {
-		var result = [];
-		while (a.length >0 && b.length >0) {
-			counter+=1;
-
-			result.push(a[0].value < b[0].value ? a.shift() : b.shift());
-		}
-		counter += (a.length? a : b).length;
-		return result.concat(a.length? a : b);
-	}
-	
-	// Liefert einen random generierten Integer, der zwischen min (inklusiv) und max (exklusiv) liegt
-	function getRandomInt(min, max) {
-		return Math.floor(Math.random() * (max - min)) + min;
-	}
-
-// Liefert den längsten Pfad mit aufsteigendem Gewicht
 	function longestPathWithStrongMonotonIncreasingWeight(graph) {
 		counter =0;
-		var longestPath = 0;	// Der längste gefundene Weg
-		var lastSeenEdge = null;// Die zuletzt betrachtete Kante (Wir dürfen nur streng monoton steigend suchen)
-
-		// 1.) alle Kanten von klein nach groß sortieren
-		var edgesSorted = new Array().concat(graph.edges);
-
-		// Den Startknoten suchen. Dieser hängt an der kleinsten Kante.
-
-		//var startVertex = lastSeenEdge.getSource();// F
-		//var endVertex = lastSeenEdge.getTarget();
-
-		//Länge zum Vergleichen erstellen
+		var lastSeenEdge = null;
+		var edges = new Array().concat(graph.edges);
+		
 		var v1 = 0;
 
-		//Solange unser sortiertes Edgearray nicht leer ist, soll er immer mit der kürzesten Edge beginnend nach einen kürzesten Pfad suchen.
-		while (edgesSorted.length>0) {
+		while (edges.length>0) {
 			counter++;
-		lastSeenEdge = edgesSorted[0];
-			//aufrufen der suche nach den kürzesten Pfad
-		var v2 = getDepth(graph, lastSeenEdge, 1, edgesSorted);
-			//vergleich ob der gefundene längeste Pfad größer ist, als der bisherige längste Pfad.
-		if (v1 < v2[0]) v1 = v2[0];
+			lastSeenEdge = edges[0];
+			var v2 = getDepth(graph, lastSeenEdge, 1, edges);
+			if (v1 < v2[0]) {
+				v1 = v2[0];
+			}
 		}
 		return v1;
 		
@@ -269,56 +217,35 @@ Testergebnisse
 	function getDepth(graph, edge, depth, edgeList){
 		counter++;
 
-		//Target Knoten der Edge erhalten, um weitere Edges zu finden.
 		var endVertex = edge.getTarget();
-		//Initialisirung einer Variable zum bestimen des Abstandes zum Pfadende.
 		var depthTillBeginning = 0;
 
-		//Entfernen der Edge aus der EdgeListe
 		var elemIndex = edgeList.indexOf(edge);
 		if (elemIndex>-1) {
 			edgeList.splice(elemIndex, 1);
 		}
 
-		//Sofern die Edge schonmal betrachtet worden ist, gibt sie ihren längsten Weg zu einen Pfadende zurück ohne die Schleife weiter zu durchlaufen.
 		if (edge.depth > 0){
 			return [depth + edge.depth-1,edge.depth+1];
 		}
 
-		//Erhalten aller Nachfolger des Targetknotens im Graphen.
 		var edges = graph.getEdgesOf(endVertex);
 
-		//Sichern der Variable depth, da diese im Schleifenaufruf geändert werden könnte!
 		var thisDepth = depth;
 
-		//Schleife über alle Nachfolger
 		for(var i = 0 ; i < edges.length; i++){
 			counter++;
-				//Prüfung streng Monoton steigend!
 				if (edge.value < edges[i].value) {
-
-
-					//Ein gefundener Pfad wird weitergegangen
 					var currDepth = getDepth(graph, edges[i], thisDepth + 1, edgeList);
-
-					//Überprüfung, ob der gefundene Pfad tiefer ist, als der aktuelle.
 					if (currDepth[0] > depth) {
-
-						//Setzen der maximalen Tiefe des gefundenen Pfades
 						depth = currDepth[0];
-
-						//Setzen der entfernung zum Pfadende
 						depthTillBeginning = currDepth[1]
 					}
 				}
 		}
 
-		//Sofern kein weiterer Pfad gefunden wordne ist, muss es sich um den akutellen tiefsten Pfad handeln, der aus der Schleife hervorgeht.
-		//Sollte es sich um eine Endedge handeln (edge, an der es nicht weitergeht), wird die Tiefe bis zum Pfadende auf 1 gesetzt.
 		if (depthTillBeginning == 0) depthTillBeginning = 1;
-		//In der Edge wird dieser Wert gsichert.
 		edge.depth = depthTillBeginning;
-		//rückgabe der Tiefe und der entfernung zum Pfadende
 		return [depth,depthTillBeginning+1];
 	}
 	
