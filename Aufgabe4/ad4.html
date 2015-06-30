@@ -280,6 +280,10 @@ var BinBaumNode = function(leftChild,rightChild){
         return this.propergate(1,values+1);
     }
     
+    this.getLongestLine = function(){
+        return this.propergate(1,1);
+    }
+    
     this.propergate = function(left,right){
         var leftLength, rightLength;
         if(this.leftChild != undefined)
@@ -304,11 +308,7 @@ var BinBaumNode = function(leftChild,rightChild){
 
 }
 
-var n2l=new BinBaumNode();
-var n3r=new BinBaumNode();
-var n2r=new BinBaumNode(undefined,n3r);
-var root=new BinBaumNode(n2l,n2r);
-console.log(root.propergate(1,1));
+
 </script>
 
 
@@ -911,6 +911,66 @@ $().ready(function () {
 
     
     test43 = new RuebeTest("#aufgabe43results");
+    var n2l=new BinBaumNode();
+    var n3r=new BinBaumNode();
+    var n2r=new BinBaumNode(undefined,n3r);
+    var root=new BinBaumNode(n2l,n2r);
+    console.log(root.propergate(1,1));
+    test43.assertInfo("Tests mit der Länge 2");
+    var child = new BinBaumNode();
+    var root = new BinBaumNode(child,undefined);
+    test43.assertTest(root.getLongestLine(),2,"Wurzel mit linkem Blatt hat 2 Elemente");
+    var child = new BinBaumNode();
+    var root = new BinBaumNode(undefined,child);
+    test43.assertTest(root.getLongestLine(),2,"Wurzel mit rechtem Blatt hat 2 Elemente");
+    var lchild = new BinBaumNode();
+    var rchild = new BinBaumNode();
+    var root = new BinBaumNode(lchild,rchild);
+    test43.assertTest(root.getLongestLine(),2,"Wurzel mit linkem Blatt und rechten Blatt hat 2 Elemente");
+    var leafchild = new BinBaumNode();
+    var child = new BinBaumNode(leafchild,undefined);
+    var root = new BinBaumNode(undefined,child);
+    test43.assertTest(root.getLongestLine(),2,"Wurzel mit linkem Blatt am rechten Ast hat 2 Elemente");
+    var leafchild = new BinBaumNode();
+    var child = new BinBaumNode(undefined,leafchild);
+    var root = new BinBaumNode(child,undefined);
+    test43.assertTest(root.getLongestLine(),2,"Wurzel mit linkem Blatt am rechten Ast hat 2 Elemente");
+    
+    test43.assertInfo("Tests mit der Länge 3");
+    var leafchild = new BinBaumNode();
+    var child = new BinBaumNode(undefined,leafchild);
+    var root = new BinBaumNode(undefined,child);
+    test43.assertTest(root.getLongestLine(),3,"linearer Baum rechts 3 Elemente");
+    var leafchild = new BinBaumNode();
+    var child = new BinBaumNode(leafchild);
+    var root = new BinBaumNode(child);
+    test43.assertTest(root.getLongestLine(),3,"linearer Baum links 3 Elemente");
+    var cchild = new BinBaumNode();
+    var bchild = new BinBaumNode(cchild);
+    var achild = new BinBaumNode(bchild);
+    var root = new BinBaumNode(undefined,achild);
+    test43.assertTest(root.getLongestLine(),3,"Wurzel mit linkem Pfad am rechten Ast hat 3 Elemente");
+    var cchild = new BinBaumNode();
+    var bchild = new BinBaumNode(undefined,cchild);
+    var achild = new BinBaumNode(undefined,bchild);
+    var root = new BinBaumNode(achild,undefined);
+    test43.assertTest(root.getLongestLine(),3,"Wurzel mit rechtem Pfad am linken Ast hat 3 Elemente");
+    
+    var dchild = new BinBaumNode();
+    var cchild = new BinBaumNode(undefined,dchild);
+    var bchild = new BinBaumNode(cchild);
+    var achild = new BinBaumNode(bchild);
+    var root = new BinBaumNode(undefined,achild);
+    test43.assertTest(root.getLongestLine(),3,"Wurzel mit linkem Pfad am rechten Ast hat 3 Elemente");
+    var cchild = new BinBaumNode(dchild);
+    var bchild = new BinBaumNode(undefined,cchild);
+    var achild = new BinBaumNode(undefined,bchild);
+    var root = new BinBaumNode(achild,undefined);
+    test43.assertTest(root.getLongestLine(),3,"Wurzel mit rechtem Pfad am linken Ast hat 3 Elemente");
+    
+    
+    
+    
     test44 = new RuebeTest("#aufgabe44results");
     
 	 test44.assertTest(longestPathWithStrongMonotonIncreasingWeight(graph),1, "1 == longestPathWithStrongMonotonIncreasingWeight(graph)") ;
