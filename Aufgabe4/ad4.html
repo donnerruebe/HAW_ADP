@@ -61,11 +61,21 @@ var RuebeTest = function (query) {
     }
 
 }
+
+var getRandomInt = function(start,ende){
+    var dist=ende-start;
+    return Math.round(Math.random()*dist)+start;
+}
+
+var count41=0;
+var count42=0;
+var count43=0;
+
 </script>  
   
   <!-- tests -->
 <script id="aufgabe41script">
-
+var ad_4_1_data = [];
 
 //4.1
 liste = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
@@ -73,20 +83,23 @@ liste2 = [4, 4];
 ziel = 7;
 
 countSort = function (Haufen, Summe) {
+    count41=0;
     var countlist = {};
     var paare = 0;
-    if (Summe <= 0) {
-        return -1;
-    }
+    //if (Summe <= 0) {
+    //    return -1;
+    //}
     for (var idx in Haufen) {
+        count41+=1;
         var Zahl = Haufen[idx];
-        if (Zahl < 0) {
-            return -2;
-        }
+        //if (Zahl < 0) {
+        //    return -2;
+        //}
         countlist[Zahl] = (countlist[Zahl] || 0) + 1;
     }
     console.log(countlist);
     for (var idx in countlist) {
+        count41+=1;
         var anzahl = countlist[idx] || 0;
         var anzahl2 = countlist[Summe - idx] || 0;
         if (idx == Summe - idx) {
@@ -99,16 +112,32 @@ countSort = function (Haufen, Summe) {
             return paare;
         }
     }
+    ad_4_1_data
     return paare;
 
 }
 
+/*Experimente*************************/
 
+var createRandomList = function(n){
+    var list=[];
+    for(var i=0;i<n;i++){
+        list.push(getRandomInt(0,n));
+    }
+    return list;
+}
 
+for(var i=1;i<=100;i++){
+    exList = createRandomList(i);
+    exval  = getRandomInt(-i,i);
+    countSort(exList,exval);
+    ad_4_1_data.push({experiment:i,value:count41});
+}
   
 </script>
   
 <script id="aufgabe42script">
+var ad_4_2_data = [];
 var ghostMidPoint = 0;
 var midPoint = function(sequenz){
     ghostCount = 0;
@@ -142,6 +171,14 @@ var midPoint = function(sequenz){
     return -1;
 };
 
+
+for(var i=1;i<=100;i++){
+    exList = createRandomList(i);
+    exval  = getRandomInt(-i,i);
+    midPoint(exList,exval);
+    ad_4_2_data.push({experiment:i,value:count41});
+}
+
 </script>
 </head>
 <body>
@@ -169,6 +206,7 @@ var midPoint = function(sequenz){
   <div id="aufgabe41results">
     X
   </div>
+  <div id="aufgabe41experiments" style="height: 250px;"></div>
 </div>
   
 <div class="row">
@@ -178,6 +216,7 @@ var midPoint = function(sequenz){
   <div id="aufgabe42results">
     
   </div>
+  <div id="aufgabe42experiments" style="height: 250px;"></div>
 </div>
   
 <div class="row">
@@ -187,6 +226,7 @@ var midPoint = function(sequenz){
   <div id="aufgabe43results">
     
   </div>
+  <div id="aufgabe43experiments" style="height: 250px;"></div>
 </div>
   
 <div class="row">
@@ -230,7 +270,7 @@ console.log(getMiddleSumIndex(sequenz));*/
 </script>
 
 <script id="aufgabe43script">
-
+var ad_4_3_data = [];
 var BinBaumNode = function(leftChild,rightChild){
     this.leftChild=leftChild;
     this.rightChild=rightChild;
@@ -251,6 +291,7 @@ var BinBaumNode = function(leftChild,rightChild){
     
     this.propergate = function(left,right){
         var leftLength, rightLength;
+        count43+=1;
         if(this.leftChild != undefined)
         {
             leftLength = this.leftChild.countLeft(left);
@@ -272,7 +313,6 @@ var BinBaumNode = function(leftChild,rightChild){
     }
 
 }
-
 
 </script>
 
@@ -307,10 +347,12 @@ var BinBaumNode = function(leftChild,rightChild){
 			var resultSet = [];
 			for(var i=0; i < this.edgesCount;i++){
 				var edge = this.edges[i];
+                if(edge.getSource()!=undefined){
 				if(edge.getSource().equals(vertex))
 				{
 					resultSet.push(this.edges[i]);
 				}
+                }
 			}
 			return resultSet;
 		}
@@ -337,6 +379,10 @@ var BinBaumNode = function(leftChild,rightChild){
 		}
 		
 		this.equals = function(otherVertex){
+            if(this == undefined || otherVertex == undefined)
+            {
+                return false;
+            }
 			if(this.value == otherVertex.value){
 				return true;
 			}
@@ -435,7 +481,7 @@ var BinBaumNode = function(leftChild,rightChild){
 	 //graph1 erstellen
 	   // Testgraph 1
   // ---------------------------------------------------
-  var graphJan = new Graph();
+  var graph_a = new Graph();
 
   var v0 = new MyVertex("0");
   var v1 = new MyVertex("1");
@@ -462,30 +508,30 @@ var BinBaumNode = function(leftChild,rightChild){
   var e12 = new MyEdge(v8, v7, 2);
 
   // Add Vertices
-  graphJan.addVertex(v0);
-  graphJan.addVertex(v1);
-  graphJan.addVertex(v2);
-  graphJan.addVertex(v3);
-  graphJan.addVertex(v4);
-  graphJan.addVertex(v5);
-  graphJan.addVertex(v6);
-  graphJan.addVertex(v7);
-  graphJan.addVertex(v8);
+  graph_a.addVertex(v0);
+  graph_a.addVertex(v1);
+  graph_a.addVertex(v2);
+  graph_a.addVertex(v3);
+  graph_a.addVertex(v4);
+  graph_a.addVertex(v5);
+  graph_a.addVertex(v6);
+  graph_a.addVertex(v7);
+  graph_a.addVertex(v8);
 
   // Add Edges
-  graphJan.addEdge(e0);
-  graphJan.addEdge(e1);
-  graphJan.addEdge(e2);
-  graphJan.addEdge(e3);
-  graphJan.addEdge(e4);
-  graphJan.addEdge(e5);
-  graphJan.addEdge(e6);
-  graphJan.addEdge(e7);
-  graphJan.addEdge(e8);
-  graphJan.addEdge(e9);
-  graphJan.addEdge(e10);
-  graphJan.addEdge(e11);
-  graphJan.addEdge(e12);
+  graph_a.addEdge(e0);
+  graph_a.addEdge(e1);
+  graph_a.addEdge(e2);
+  graph_a.addEdge(e3);
+  graph_a.addEdge(e4);
+  graph_a.addEdge(e5);
+  graph_a.addEdge(e6);
+  graph_a.addEdge(e7);
+  graph_a.addEdge(e8);
+  graph_a.addEdge(e9);
+  graph_a.addEdge(e10);
+  graph_a.addEdge(e11);
+  graph_a.addEdge(e12);
 
   // ------------------------------------------------------
 
@@ -493,7 +539,7 @@ var BinBaumNode = function(leftChild,rightChild){
   // Test-Graph 2
 
   // ------------------------------------------------------
-  var graph2Jan = new Graph();
+  var graph_b = new Graph();
 
   var vert1 = new MyVertex("A");
   var vert2 = new MyVertex("B");
@@ -505,22 +551,22 @@ var BinBaumNode = function(leftChild,rightChild){
   var e3 = new MyEdge(vert3, vert4, 1);
   var e4 = new MyEdge(vert4, vert1, 1);
 
-  graph2Jan.addVertex(vert1);
-  graph2Jan.addVertex(vert2);
-  graph2Jan.addVertex(vert3);
-  graph2Jan.addVertex(vert4);
+  graph_b.addVertex(vert1);
+  graph_b.addVertex(vert2);
+  graph_b.addVertex(vert3);
+  graph_b.addVertex(vert4);
 
-  graph2Jan.addEdge(e1);
-  graph2Jan.addEdge(e2);
-  graph2Jan.addEdge(e3);
-  graph2Jan.addEdge(e4);
+  graph_b.addEdge(e1);
+  graph_b.addEdge(e2);
+  graph_b.addEdge(e3);
+  graph_b.addEdge(e4);
 
   // --------------------------------------------------------
 
   // Testgraph 3
   // -------------------------------------------------------
 
-  var graph3Jan = new Graph();
+  var graph_c = new Graph();
 
   var vert1 = new MyVertex("A");
   var vert2 = new MyVertex("B");
@@ -530,20 +576,20 @@ var BinBaumNode = function(leftChild,rightChild){
   var e2 = new MyEdge(vert2, vert2, 1);
   var e3 = new MyEdge(vert2, vert3, 2);
 
-  graph3Jan.addVertex(vert1);
-  graph3Jan.addVertex(vert2);
-  graph3Jan.addVertex(vert3);
+  graph_c.addVertex(vert1);
+  graph_c.addVertex(vert2);
+  graph_c.addVertex(vert3);
 
-  graph3Jan.addEdge(e1);
-  graph3Jan.addEdge(e2);
-  graph3Jan.addEdge(e3);
+  graph_c.addEdge(e1);
+  graph_c.addEdge(e2);
+  graph_c.addEdge(e3);
 
   // --------------------------------------------------------
 
   // Testgraph 4
   // ---------------------------------------------------------
 
-  var graph4Jan = new Graph();
+  var graph_d = new Graph();
 
   var vert1 = new MyVertex("A");
   var vert2 = new MyVertex("B");
@@ -552,27 +598,27 @@ var BinBaumNode = function(leftChild,rightChild){
   var vert5 = new MyVertex("E");
   var vert6 = new MyVertex("F");
 
-  graph4Jan.addVertex(vert1);
-  graph4Jan.addVertex(vert2);
-  graph4Jan.addVertex(vert3);
-  graph4Jan.addVertex(vert4);
-  graph4Jan.addVertex(vert5);
-  graph4Jan.addVertex(vert6);
+  graph_d.addVertex(vert1);
+  graph_d.addVertex(vert2);
+  graph_d.addVertex(vert3);
+  graph_d.addVertex(vert4);
+  graph_d.addVertex(vert5);
+  graph_d.addVertex(vert6);
 
   var edge1 = new MyEdge(vert1, vert2, 1);
   var edge2 = new MyEdge(vert2, vert3, 2);
   var edge3 = new MyEdge(vert3, vert4, 0);
   var edge4 = new MyEdge(vert5, vert6, 5);
 
-  graph4Jan.addEdge(edge1);
-  graph4Jan.addEdge(edge2);
-  graph4Jan.addEdge(edge3);
-  graph4Jan.addEdge(edge4);
+  graph_d.addEdge(edge1);
+  graph_d.addEdge(edge2);
+  graph_d.addEdge(edge3);
+  graph_d.addEdge(edge4);
 
 
   // --------------------------------------------------------
  
-	 var graf_henning = new Graph();
+	 var graph_e = new Graph();
 		
 		//Knoten erstellen
 		var vertex0 = new MyVertex('V0');
@@ -591,53 +637,53 @@ var BinBaumNode = function(leftChild,rightChild){
 		var vertex13 = new MyVertex('V13');
 		var vertex14 = new MyVertex('V14');
 		
-		graf_henning.addVertex(vertex0);
-		graf_henning.addVertex(vertex1);
-		graf_henning.addVertex(vertex2);
-		graf_henning.addVertex(vertex3);
-		graf_henning.addVertex(vertex4);
-		graf_henning.addVertex(vertex5);
-		graf_henning.addVertex(vertex6);
-		graf_henning.addVertex(vertex7);
-		graf_henning.addVertex(vertex8);
-		graf_henning.addVertex(vertex9);
-		graf_henning.addVertex(vertex10);
-		graf_henning.addVertex(vertex11);
-		graf_henning.addVertex(vertex12);
-		graf_henning.addVertex(vertex13);
-		graf_henning.addVertex(vertex14);
+		graph_e.addVertex(vertex0);
+		graph_e.addVertex(vertex1);
+		graph_e.addVertex(vertex2);
+		graph_e.addVertex(vertex3);
+		graph_e.addVertex(vertex4);
+		graph_e.addVertex(vertex5);
+		graph_e.addVertex(vertex6);
+		graph_e.addVertex(vertex7);
+		graph_e.addVertex(vertex8);
+		graph_e.addVertex(vertex9);
+		graph_e.addVertex(vertex10);
+		graph_e.addVertex(vertex11);
+		graph_e.addVertex(vertex12);
+		graph_e.addVertex(vertex13);
+		graph_e.addVertex(vertex14);
 		
-		graf_henning.addEdge(new MyEdge(vertex1,vertex4,1));
-		graf_henning.addEdge(new MyEdge(vertex9,vertex8,30));
-		graf_henning.addEdge(new MyEdge(vertex7,vertex5,60));
-		graf_henning.addEdge(new MyEdge(vertex4,vertex11,100));
-		graf_henning.addEdge(new MyEdge(vertex11,vertex9,2));
-		graf_henning.addEdge(new MyEdge(vertex1,vertex3,2));
-		graf_henning.addEdge(new MyEdge(vertex2,vertex0,2));
-		graf_henning.addEdge(new MyEdge(vertex13,vertex12,5));
-		graf_henning.addEdge(new MyEdge(vertex13,vertex8,1));
-		graf_henning.addEdge(new MyEdge(vertex3,vertex1,5));
-		graf_henning.addEdge(new MyEdge(vertex4,vertex7,5));
-		graf_henning.addEdge(new MyEdge(vertex5,vertex4,10));
-		graf_henning.addEdge(new MyEdge(vertex11,vertex4,10));
-		graf_henning.addEdge(new MyEdge(vertex12,vertex8,7));
-		graf_henning.addEdge(new MyEdge(vertex2,vertex1,8));
-		graf_henning.addEdge(new MyEdge(vertex10,vertex2,8));
-		graf_henning.addEdge(new MyEdge(vertex6,vertex5,9));
-		graf_henning.addEdge(new MyEdge(vertex12,vertex6,10));
-		graf_henning.addEdge(new MyEdge(vertex6,vertex10,11));
-		graf_henning.addEdge(new MyEdge(vertex3,vertex5,13));
-		graf_henning.addEdge(new MyEdge(vertex3,vertex6,16));
-		graf_henning.addEdge(new MyEdge(vertex13,vertex11,17));
-		graf_henning.addEdge(new MyEdge(vertex2,vertex3,19));
-		graf_henning.addEdge(new MyEdge(vertex10,vertex6,19));
-		graf_henning.addEdge(new MyEdge(vertex9,vertex4,20));
-		graf_henning.addEdge(new MyEdge(vertex1,vertex0,3));
-		graf_henning.addEdge(new MyEdge(vertex7,vertex12,3));
-		graf_henning.addEdge(new MyEdge(vertex11,vertex0,4));
-		graf_henning.addEdge(new MyEdge(vertex9,vertex13,4));
-		graf_henning.addEdge(new MyEdge(vertex3,vertex10,20));
-		graf_henning.addEdge(new MyEdge(vertex14,vertex14,200));
+		graph_e.addEdge(new MyEdge(vertex1,vertex4,1));
+		graph_e.addEdge(new MyEdge(vertex9,vertex8,30));
+		graph_e.addEdge(new MyEdge(vertex7,vertex5,60));
+		graph_e.addEdge(new MyEdge(vertex4,vertex11,100));
+		graph_e.addEdge(new MyEdge(vertex11,vertex9,2));
+		graph_e.addEdge(new MyEdge(vertex1,vertex3,2));
+		graph_e.addEdge(new MyEdge(vertex2,vertex0,2));
+		graph_e.addEdge(new MyEdge(vertex13,vertex12,5));
+		graph_e.addEdge(new MyEdge(vertex13,vertex8,1));
+		graph_e.addEdge(new MyEdge(vertex3,vertex1,5));
+		graph_e.addEdge(new MyEdge(vertex4,vertex7,5));
+		graph_e.addEdge(new MyEdge(vertex5,vertex4,10));
+		graph_e.addEdge(new MyEdge(vertex11,vertex4,10));
+		graph_e.addEdge(new MyEdge(vertex12,vertex8,7));
+		graph_e.addEdge(new MyEdge(vertex2,vertex1,8));
+		graph_e.addEdge(new MyEdge(vertex10,vertex2,8));
+		graph_e.addEdge(new MyEdge(vertex6,vertex5,9));
+		graph_e.addEdge(new MyEdge(vertex12,vertex6,10));
+		graph_e.addEdge(new MyEdge(vertex6,vertex10,11));
+		graph_e.addEdge(new MyEdge(vertex3,vertex5,13));
+		graph_e.addEdge(new MyEdge(vertex3,vertex6,16));
+		graph_e.addEdge(new MyEdge(vertex13,vertex11,17));
+		graph_e.addEdge(new MyEdge(vertex2,vertex3,19));
+		graph_e.addEdge(new MyEdge(vertex10,vertex6,19));
+		graph_e.addEdge(new MyEdge(vertex9,vertex4,20));
+		graph_e.addEdge(new MyEdge(vertex1,vertex0,3));
+		graph_e.addEdge(new MyEdge(vertex7,vertex12,3));
+		graph_e.addEdge(new MyEdge(vertex11,vertex0,4));
+		graph_e.addEdge(new MyEdge(vertex9,vertex13,4));
+		graph_e.addEdge(new MyEdge(vertex3,vertex10,20));
+		graph_e.addEdge(new MyEdge(vertex14,vertex14,200));
 
 		
 		
@@ -762,6 +808,54 @@ var BinBaumNode = function(leftChild,rightChild){
   }
 </script>
   <script>
+new Morris.Line({
+  // ID of the element in which to draw the chart.
+  element: 'aufgabe41experiments',
+  // do values relate to dates (time)?
+  parseTime: false,
+  // Chart data records -- each entry in this array corresponds to a point on
+  // the chart.
+  data: ad_4_1_data,
+  // The name of the data record attribute that contains x-values.
+  xkey: 'experiment',
+  // A list of names of data record attributes that contain y-values.
+  ykeys: ['value'],
+  // Labels for the ykeys -- will be displayed when you hover over the
+  // chart.
+  labels: ['Value']
+});
+new Morris.Line({
+  // ID of the element in which to draw the chart.
+  element: 'aufgabe42experiments',
+  // do values relate to dates (time)?
+  parseTime: false,
+  // Chart data records -- each entry in this array corresponds to a point on
+  // the chart.
+  data: ad_4_2_data,
+  // The name of the data record attribute that contains x-values.
+  xkey: 'experiment',
+  // A list of names of data record attributes that contain y-values.
+  ykeys: ['value'],
+  // Labels for the ykeys -- will be displayed when you hover over the
+  // chart.
+  labels: ['Value']
+});
+new Morris.Line({
+  // ID of the element in which to draw the chart.
+  element: 'aufgabe43experiments',
+  // do values relate to dates (time)?
+  parseTime: false,
+  // Chart data records -- each entry in this array corresponds to a point on
+  // the chart.
+  data: ad_4_3_data,
+  // The name of the data record attribute that contains x-values.
+  xkey: 'experiment',
+  // A list of names of data record attributes that contain y-values.
+  ykeys: ['value'],
+  // Labels for the ykeys -- will be displayed when you hover over the
+  // chart.
+  labels: ['Value']
+});
 new Morris.Line({
   // ID of the element in which to draw the chart.
   element: 'aufgabe44experiments',
@@ -890,12 +984,12 @@ $().ready(function () {
     test44 = new RuebeTest("#aufgabe44results");
     
 	 test44.assertTest(longestPathWithStrongMonotonIncreasingWeight(graph),1, "1 == longestPathWithStrongMonotonIncreasingWeight(graph)") ;
-	 test44.assertTest(longestPathWithStrongMonotonIncreasingWeight(graf_henning),6, "6 == longestPathWithStrongMonotonIncreasingWeight(graf_henning)") ;
-	  test44.assertTest(longestPathWithStrongMonotonIncreasingWeight(graphJan),5,"longestPathWithStrongMonotonIncreasingWeight(graphJan)==5");
-	  test44.assertTest(longestPathWithStrongMonotonIncreasingWeight(graph2Jan),1,"longestPathWithStrongMonotonIncreasingWeight(graph2Jan)==1");
-	  test44.assertTest(longestPathWithStrongMonotonIncreasingWeight(graph2Jan),1,"ongestPathWithStrongMonotonIncreasingWeight(graph2Jan)==1");
-	  test44.assertTest(longestPathWithStrongMonotonIncreasingWeight(graph3Jan),3,"longestPathWithStrongMonotonIncreasingWeight(graph3Jan)==3");
-	  test44.assertTest(longestPathWithStrongMonotonIncreasingWeight(graph4Jan),2,"longestPathWithStrongMonotonIncreasingWeight(graph4Jan)==2");
+	 test44.assertTest(longestPathWithStrongMonotonIncreasingWeight(graph_e),6, "6 == longestPathWithStrongMonotonIncreasingWeight(graph_e)") ;
+	  test44.assertTest(longestPathWithStrongMonotonIncreasingWeight(graph_a),5,"longestPathWithStrongMonotonIncreasingWeight(graph_a)==5");
+	  test44.assertTest(longestPathWithStrongMonotonIncreasingWeight(graph_b),1,"longestPathWithStrongMonotonIncreasingWeight(graph_b)==1");
+	  test44.assertTest(longestPathWithStrongMonotonIncreasingWeight(graph_b),1,"ongestPathWithStrongMonotonIncreasingWeight(graph_b)==1");
+	  test44.assertTest(longestPathWithStrongMonotonIncreasingWeight(graph_c),3,"longestPathWithStrongMonotonIncreasingWeight(graph_c)==3");
+	  test44.assertTest(longestPathWithStrongMonotonIncreasingWeight(graph_d),2,"longestPathWithStrongMonotonIncreasingWeight(graph_d)==2");
 
     
     
